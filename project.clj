@@ -14,6 +14,7 @@
                  [org.apache.solr/solr-solrj "3.4.0"]
                  [com.rabbitmq/amqp-client "2.7.1"]
                  [com.indextank/indextank-java "1.0.9"]
+                 ;; [javax.units/jsr108 "0.01"] ; http://jsr-108.sourceforge.net/javadoc/index.html
 
                  [org.clojure/algo.generic "0.1.1-SNAPSHOT"]
                  [org.clojure/algo.monads "0.1.3-SNAPSHOT"]
