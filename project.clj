@@ -3,17 +3,26 @@
   ;; http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.clojure%22
   ;; http://dev.clojure.org/display/doc/Clojure+Contrib
   ;; http://dev.clojure.org/display/design/Where+Did+Clojure.Contrib+Go
+  ;; http://stackoverflow.com/questions/7511789/clojure-lein-how-do-i-include-a-java-file-in-my-project
+  ;; http://alexott.net/en/clojure/ClojureLein.html
   :dependencies [[org.clojure/clojure "1.3.0"]
                  [org.mongodb/mongo-java-driver "2.6.3"]
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
-                 [org.apache.lucene/lucene-core "3.4.0"]
-                 [org.apache.lucene/lucene-queries "3.4.0"]
+
+                 [org.apache.lucene/lucene-core "3.6.0"]
+                 [org.apache.lucene/lucene-queries "3.6.0"]
+                 [clucy "0.3.0"]
+
+                 [org.apache.solr/solr-core "3.6.0"]
+                 [org.apache.solr/solr-solrj "3.6.0"]
+                 
                  [javax.mail/mail "1.4.1"]
-                 [org.apache.solr/solr-core "3.4.0"]
-                 [org.apache.solr/solr-solrj "3.4.0"]
                  [com.rabbitmq/amqp-client "2.7.1"]
                  [com.indextank/indextank-java "1.0.9"]
+                 ;; [javax.units/jsr108 "0.01"] ; http://jsr-108.sourceforge.net/javadoc/index.html
+
+                 [org.clojars.tavisrudd/redis-clojure "1.3.1"]
 
                  [org.clojure/algo.generic "0.1.1-SNAPSHOT"]
                  [org.clojure/algo.monads "0.1.3-SNAPSHOT"]
