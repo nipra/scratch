@@ -116,6 +116,17 @@
                  [org.apache.httpcomponents/httpclient "4.1.3"]
                  [org.apache.httpcomponents/httpcore "4.1.3"]
 
+                 [korma "0.3.0-beta9"]
+                 [org.neo4j/neo4j "1.7"]
+
+                 [clj-time "0.4.2"]
+
+                 ;; https://github.com/liebke/incanter
+                 [incanter "1.3.0"]
+
+                 [compojure "1.1.0-RC1"]
+                 [ring "1.1.0"]
+
                  [org.clojure/algo.generic "0.1.0"]
                  [org.clojure/algo.monads "0.1.0"]
 
