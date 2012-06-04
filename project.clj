@@ -127,6 +127,23 @@
                  [compojure "1.1.0-RC1"]
                  [ring "1.1.0"]
 
+                 ;; https://github.com/ibdknox/noir
+                 ;; A framework for writing clojure websites.
+                 [noir "1.2.2"]
+
+                 ;;
+                 [org.slf4j/slf4j-api "1.6.4"]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
+
+                 ;; https://github.com/Raynes/fs
+                 ;; File system utilities for Clojure.
+                 [fs "1.1.2"]
+
+                 ;; https://github.com/jashmenn/clj-file-utils
+                 ;; Unix-like filesystem manipulation utilities for Clojure,
+                 ;; wrapping Apache Commons IO.
+                 [clj-file-utils "0.2.1"]
+
                  [org.clojure/algo.generic "0.1.0"]
                  [org.clojure/algo.monads "0.1.0"]
 
