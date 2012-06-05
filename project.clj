@@ -43,7 +43,7 @@
                  ;; [org.mongodb/mongo-java-driver "2.6.3"]
                  ;; Monger is an idiomatic Clojure MongoDB driver for a more
                  ;; civilized age.
-                 [com.novemberain/monger "1.0.0-beta7"]
+                 [com.novemberain/monger "1.0.0-beta8"]
                  
                  ;; http://neo4j.org/download/
                  [org.neo4j/neo4j "1.7.1"]
@@ -59,7 +59,7 @@
 
                  ;; Welle is an expressive Clojure client for Riak with
                  ;; batteries included.
-                 [com.novemberain/welle "1.0.0"]
+                 [com.novemberain/welle "1.1.0-alpha3"]
 
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
