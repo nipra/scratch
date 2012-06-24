@@ -5,7 +5,7 @@
 
 (def ^{:dynamic true} *pdf-dir* "/home/nipra/Dropbox/Personal/Documents")
 
-(def ^{:dynamic true} *index-dir* "/home/nipra/data/Lucene/pdfs")
+(def ^{:dynamic true} *index-dir* "/home/nipra/lucene-index/pdfs")
 
 (def ^{:doc "List of various pdf fields."}
   pdf-fields
