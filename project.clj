@@ -15,7 +15,10 @@
                  [clucy "0.3.0"]
 
                  ;; Core interfaces/classes, external parser libs, GUI, CLI
-                 [org.apache.tika/tika-app "1.1"]
+                 ;; Issues with slf4j versions because of one of the parsers included
+                 ;; in tika-app. Use tika-parsers instead.
+                 ;; [org.apache.tika/tika-app "1.1"]
+                 [org.apache.tika/tika-parsers "1.1"]
 
                  [org.apache.solr/solr-core "3.6.0"]
                  [org.apache.solr/solr-solrj "3.6.0"]
@@ -134,7 +137,7 @@
                  ;;
                  [org.slf4j/slf4j-api "1.6.4"]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
-
+                 
                  ;; https://github.com/Raynes/fs
                  ;; File system utilities for Clojure.
                  [fs "1.1.2"]
