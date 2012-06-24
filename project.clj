@@ -144,6 +144,14 @@
                  ;; wrapping Apache Commons IO.
                  [clj-file-utils "0.2.1"]
 
+                 ;; Some Clojure functions we use all the time, and so can you.
+                 ;; https://github.com/flatland/useful
+                 [useful "0.8.3-alpha3"]
+
+                 ;; A graph database with pluggable backends, written in Clojure.
+                 ;; https://github.com/flatland/jiraph
+                 [jiraph "0.8.0-beta6"]
+
                  [org.clojure/algo.generic "0.1.0"]
                  [org.clojure/algo.monads "0.1.0"]
 
