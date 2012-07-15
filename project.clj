@@ -147,19 +147,31 @@
                  ;; wrapping Apache Commons IO.
                  [clj-file-utils "0.2.1"]
 
-                 ;; Some Clojure functions we use all the time, and so can you.
-                 ;; https://github.com/flatland/useful
-                 [useful "0.8.3-alpha3"]
-
                  ;; A graph database with pluggable backends, written in Clojure.
                  ;; https://github.com/flatland/jiraph
                  [jiraph "0.8.0-beta6"]
 
+                 ;;;;;;;;;;;;;;;;;;
                  ;; Utilities
+                 ;;;;;;;;;;;;;;;;;;
+                 
                  ;; A set of clojure utilities created while working on Conjure.
                  ;; https://github.com/macourtney/clojure-tools
                  [clojure-tools "1.1.1"]
 
+                 ;; Some Clojure functions we use all the time, and so can you.
+                 ;; https://github.com/flatland/useful
+                 [useful "0.8.3-alpha3"]
+
+                 ;; A support library ClojureWerkz projects (Langohr, Monger,
+                 ;; Neocons, Elastisch, Quartzite, Money, etc) can rely on
+                 ;; https://github.com/clojurewerkz/support
+                 [clojurewerkz/support "0.6.0"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Clojure core libs
+                 ;;;;;;;;;;;;;;;;;;;;;;;
+                 
                  [org.clojure/algo.generic "0.1.0"]
                  [org.clojure/algo.monads "0.1.0"]
 
