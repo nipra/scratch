@@ -155,6 +155,11 @@
                  ;; https://github.com/flatland/jiraph
                  [jiraph "0.8.0-beta6"]
 
+                 ;; Utilities
+                 ;; A set of clojure utilities created while working on Conjure.
+                 ;; https://github.com/macourtney/clojure-tools
+                 [clojure-tools "1.1.1"]
+
                  [org.clojure/algo.generic "0.1.0"]
                  [org.clojure/algo.monads "0.1.0"]
 
