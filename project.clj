@@ -58,18 +58,20 @@
                  ;; https://github.com/scusack/neo4j-clj
                  [neo4j-clj "0.0.2-SNAPSHOT"]
                  ;; Neocons, a Clojure client for the Neo4J REST API
-                 [clojurewerkz/neocons "1.0.0-beta4"]
+                 ;; https://github.com/michaelklishin/neocons
+                 [clojurewerkz/neocons "1.0.0"]
 
                  ;; Welle is an expressive Clojure client for Riak with
                  ;; batteries included.
-                 [com.novemberain/welle "1.1.0-alpha3"]
+                 [com.novemberain/welle "1.1.0"]
 
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
                  [oauth-clj "0.0.5"]
                  ;; OAuth Consumer support for Clojure
                  ;; https://github.com/mattrepl/clj-oauth
-                 [clj-oauth "1.2.10"]
+                 ;; [clj-oauth "1.2.10"] ; Don't use brings clojure-contrib
+                 [clj-oauth "1.3.1-SNAPSHOT"]
 
                  ;; A simple and flexible library for shelling out in Clojure
                  ;; https://github.com/Raynes/conch
@@ -81,11 +83,9 @@
                  ;; https://github.com/drewr/postal
                  [com.draines/postal "1.7.1"]
                  ;; Mailer is an ActionMailer-inspired mailer library for Clojure.
+                 ;; https://github.com/clojurewerkz/mailer
                  [clojurewerkz/mailer "1.0.0-alpha3"]
 
-                 ;; Clojure HTTP library using the Apache HttpClient.
-                 ;; https://github.com/rnewman/clj-apache-http
-                 [com.twinql.clojure/clj-apache-http "2.3.1"]
                  ;; A Clojure HTTP library wrapping the Apache
                  ;; HttpComponents client.
                  ;; https://github.com/dakrone/clj-http
@@ -98,6 +98,11 @@
                  ;; Async io interface to all the twitter APIs
                  ;; https://github.com/adamwynne/twitter-api
                  [twitter-api "0.6.10"]
+
+                 ;; Clojure client for Twitter API
+                 ;; https://github.com/mattrepl/clojure-twitter
+                 ;; [clojure-twitter "1.2.5"] ; Doesn't work with Clojure 1.3.0
+                 [clojure-twitter "1.2.6-SNAPSHOT"]
 
                  ;; Clojure JSON and JSON SMILE (binary json format)
                  ;; encoding/decoding
@@ -127,8 +132,10 @@
                  ;; https://github.com/liebke/incanter
                  [incanter "1.3.0"]
 
-                 [compojure "1.1.0-RC1"]
-                 [ring "1.1.0"]
+                 ;; https://github.com/weavejester/compojure/
+                 [compojure "1.1.1"]
+                 ;; https://github.com/ring-clojure/ring
+                 [ring "1.1.1"]
 
                  ;; https://github.com/ibdknox/noir
                  ;; A framework for writing clojure websites.
@@ -150,7 +157,7 @@
                  ;; A graph database with pluggable backends, written in Clojure.
                  ;; https://github.com/flatland/jiraph
                  [jiraph "0.8.0-beta6"]
-
+                 
                  ;;;;;;;;;;;;;;;;;;
                  ;; Utilities
                  ;;;;;;;;;;;;;;;;;;
@@ -161,13 +168,20 @@
 
                  ;; Some Clojure functions we use all the time, and so can you.
                  ;; https://github.com/flatland/useful
-                 [useful "0.8.3-alpha3"]
+                 [useful "0.8.3-alpha7"]
 
                  ;; A support library ClojureWerkz projects (Langohr, Monger,
                  ;; Neocons, Elastisch, Quartzite, Money, etc) can rely on
                  ;; https://github.com/clojurewerkz/support
                  [clojurewerkz/support "0.6.0"]
 
+                 ;; Clojure HTTP library using the Apache HttpClient.
+                 ;; https://github.com/rnewman/clj-apache-http
+                 ;; [com.twinql.clojure/clj-apache-http "2.3.1"]
+                 ;; Use https://github.com/tavisrudd/clj-apache-http
+                 ;; Doesn't depend on clojure-contrib
+                 [org.clojars.tavisrudd/clj-apache-http "2.3.2-SNAPSHOT"]
+                 
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
                  ;;;;;;;;;;;;;;;;;;;;;;;
