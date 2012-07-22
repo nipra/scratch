@@ -9,6 +9,7 @@
 
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
+                 [org.xerial/sqlite-jdbc "3.6.16"]
 
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.apache.lucene/lucene-queries "3.6.0"]
