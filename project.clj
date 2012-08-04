@@ -182,6 +182,10 @@
                  ;; Use https://github.com/tavisrudd/clj-apache-http
                  ;; Doesn't depend on clojure-contrib
                  [org.clojars.tavisrudd/clj-apache-http "2.3.2-SNAPSHOT"]
+
+                 ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
+                 ;; https://github.com/antoniogarrote/clj-ml
+                 [weka/weka "3.6.7"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
