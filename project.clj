@@ -265,6 +265,7 @@
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
                  "local" ~(str (.toURI (java.io.File. "maven_repo")))
                  }
-  :resource-paths ["resource"])
+  ;; :resource-paths ["resource"]
+  )
 
 
