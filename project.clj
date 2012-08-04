@@ -82,7 +82,7 @@
                  ;; Postal is a library for constructing and sending
                  ;; RFC822-compliant Internet email messages.
                  ;; https://github.com/drewr/postal
-                 [com.draines/postal "1.7.1"]
+                 [com.draines/postal "1.8.0"]
                  ;; Mailer is an ActionMailer-inspired mailer library for Clojure.
                  ;; https://github.com/clojurewerkz/mailer
                  [clojurewerkz/mailer "1.0.0-alpha3"]
