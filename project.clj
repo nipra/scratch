@@ -10,6 +10,9 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [org.xerial/sqlite-jdbc "3.6.16"]
+                 ;; https://github.com/kumarshantanu/clj-dbcp
+                 ;; Clojure wrapper for Apache DBCP to create JDBC connections pools
+                 [clj-dbcp "0.8.0"]
 
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.apache.lucene/lucene-queries "3.6.0"]
@@ -65,6 +68,13 @@
                  ;; Welle is an expressive Clojure client for Riak with
                  ;; batteries included.
                  [com.novemberain/welle "1.1.0"]
+
+                 [org.apache.hbase/hbase "0.92.1"]
+                 ;; https://github.com/davidsantiago/clojure-hbase
+                 ;; [clojure-hbase "0.90.5-4"]
+                 ;; https://github.com/compasslabs/clojure-hbase-schemas
+                 ;; FIXME: [clj-serializer "0.1.1"] -> clojure-contrib
+                 ;; [com.compasslabs/clojure-hbase-schemas "0.90.4.4"]
 
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
@@ -217,6 +227,18 @@
                  ;; Clojure library interface to OpenNLP
                  [clojure-opennlp "0.1.10"]
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Development/Productivity/Tools
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; https://github.com/dakrone/clojuredocs-client
+                 ;; A client for the http://clojuredocs.org API
+                 [org.thnetos/cd-client "0.3.4"]
+
+                 ;; https://github.com/ninjudd/clojure-complete
+                 ;; Clojure-complete is an symbol completion library for Clojure.
+                 ;; The code is adapted from jochu/swank-clojure.
+                 [clojure-complete "0.2.1"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
