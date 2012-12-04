@@ -10,6 +10,7 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [org.xerial/sqlite-jdbc "3.6.16"]
+                 [korma "0.3.0-beta9"]
 
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.apache.lucene/lucene-queries "3.6.0"]
@@ -125,7 +126,7 @@
                  [org.apache.httpcomponents/httpclient "4.1.3"]
                  [org.apache.httpcomponents/httpcore "4.1.3"]
 
-                 [korma "0.3.0-beta9"]
+
                  [org.neo4j/neo4j "1.7"]
 
                  [clj-time "0.4.2"]
@@ -182,6 +183,41 @@
                  ;; Use https://github.com/tavisrudd/clj-apache-http
                  ;; Doesn't depend on clojure-contrib
                  [org.clojars.tavisrudd/clj-apache-http "2.3.2-SNAPSHOT"]
+
+                                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Text Mining
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; http://gate.ac.uk/
+                 ;; http://mvnrepository.com/artifact/uk.ac.gate
+                 ;; open source software capable of solving almost any
+                 ;; text processing problem
+                 [uk.ac.gate/gate-core "7.0"]
+
+                 ;; http://opennlp.apache.org/index.html
+                 ;; http://opennlp.apache.org/maven-dependency.html
+                 ;; http://mvnrepository.com/artifact/org.apache.opennlp
+                 ;; The Apache OpenNLP library is a machine learning based
+                 ;; toolkit for the processing of natural language text.
+                 [org.apache.opennlp/opennlp-tools "1.5.2-incubating"]
+                 [org.apache.opennlp/opennlp-uima "1.5.2-incubating"]
+                 [org.apache.opennlp/opennlp-maxent "3.0.2-incubating"]
+                 ;; Clojure library interface to OpenNLP
+                 [clojure-opennlp "0.1.10"]
+
+                 ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
+                 [weka/weka "3.6.7"]
+
+
+                 ;; https://github.com/alexott/clojure-hadoop
+                 ;; http://alexott.net/en/clojure/ClojureHadoop.html
+                 [clojure-hadoop "1.4.1"]
+
+                 ;; A clojure DSL for system admin and deployment with
+                 ;; many remote machines via ssh
+                 ;; https://github.com/killme2008/clojure-control
+                 [control "0.4.1"]
+
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
@@ -228,6 +264,7 @@
                  ;; Required for snapshots.
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
+                 "local" ~(str (.toURI (java.io.File. "maven_repo")))
                  })
 
 
