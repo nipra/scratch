@@ -12,6 +12,10 @@
                  [org.xerial/sqlite-jdbc "3.6.16"]
                  [korma "0.3.0-beta9"]
 
+                 ;; https://github.com/kumarshantanu/clj-dbcp
+                 ;; Clojure wrapper for Apache DBCP to create JDBC connections pools
+                 [clj-dbcp "0.8.0"]
+
                  [org.apache.lucene/lucene-core "3.6.0"]
                  [org.apache.lucene/lucene-queries "3.6.0"]
                  [clucy "0.3.0"]
@@ -67,6 +71,13 @@
                  ;; batteries included.
                  [com.novemberain/welle "1.1.0"]
 
+                 [org.apache.hbase/hbase "0.92.1"]
+                 ;; https://github.com/davidsantiago/clojure-hbase
+                 ;; [clojure-hbase "0.90.5-4"]
+                 ;; https://github.com/compasslabs/clojure-hbase-schemas
+                 ;; FIXME: [clj-serializer "0.1.1"] -> clojure-contrib
+                 ;; [com.compasslabs/clojure-hbase-schemas "0.90.4.4"]
+
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
                  [oauth-clj "0.0.5"]
@@ -83,7 +94,7 @@
                  ;; Postal is a library for constructing and sending
                  ;; RFC822-compliant Internet email messages.
                  ;; https://github.com/drewr/postal
-                 [com.draines/postal "1.7.1"]
+                 [com.draines/postal "1.8.0"]
                  ;; Mailer is an ActionMailer-inspired mailer library for Clojure.
                  ;; https://github.com/clojurewerkz/mailer
                  [clojurewerkz/mailer "1.0.0-alpha3"]
@@ -184,7 +195,20 @@
                  ;; Doesn't depend on clojure-contrib
                  [org.clojars.tavisrudd/clj-apache-http "2.3.2-SNAPSHOT"]
 
-                                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Data Mining/Machine Learning
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
+                 ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
+                 ;; https://github.com/antoniogarrote/clj-ml
+                 [weka/weka "3.6.7"]
+
+                 ;; A clojure DSL for system admin and deployment with
+                 ;; many remote machines via ssh
+                 ;; https://github.com/killme2008/clojure-control
+                 [control "0.4.1"]
+                 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Text Mining
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -218,6 +242,18 @@
                  ;; https://github.com/killme2008/clojure-control
                  [control "0.4.1"]
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Development/Productivity/Tools
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; https://github.com/dakrone/clojuredocs-client
+                 ;; A client for the http://clojuredocs.org API
+                 [org.thnetos/cd-client "0.3.4"]
+
+                 ;; https://github.com/ninjudd/clojure-complete
+                 ;; Clojure-complete is an symbol completion library for Clojure.
+                 ;; The code is adapted from jochu/swank-clojure.
+                 [clojure-complete "0.2.1"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
@@ -265,6 +301,7 @@
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
                  "local" ~(str (.toURI (java.io.File. "maven_repo")))
-                 })
-
+                 }
+  ;; :resource-paths ["resource"]
+  )
 
