@@ -1,0 +1,7 @@
+Source code in this directory has been copied from other projects partially or completely.
+Motivation: Want to get the freedom to make changes to these projects as I'm coding.
+
+Original Projects:
+https://github.com/davidsantiago/clojure-hbase
+https://github.com/compasslabs/clojure-hbase-schemas
+

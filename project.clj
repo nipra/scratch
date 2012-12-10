@@ -71,13 +71,6 @@
                  ;; batteries included.
                  [com.novemberain/welle "1.1.0"]
 
-                 [org.apache.hbase/hbase "0.92.1"]
-                 ;; https://github.com/davidsantiago/clojure-hbase
-                 ;; [clojure-hbase "0.90.5-4"]
-                 ;; https://github.com/compasslabs/clojure-hbase-schemas
-                 ;; FIXME: [clj-serializer "0.1.1"] -> clojure-contrib
-                 ;; [com.compasslabs/clojure-hbase-schemas "0.90.4.4"]
-
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
                  [oauth-clj "0.0.5"]
@@ -130,6 +123,12 @@
                  ;; A clojure wrapper for Reddit API
                  ;; https://github.com/sunng87/reddit.clj
                  [reddit.clj "0.3.3"]
+
+                 ;; Serialism is A tiny Clojure library that serializes and
+                 ;; deserializes values into popular formats based on provided
+                 ;; content type.
+                 ;; https://github.com/clojurewerkz/serialism
+                 [clojurewerkz/serialism "1.0.0"]
 
                  ;; Latest versions from
                  ;; http://mvnrepository.com/artifact/org.apache.httpcomponents
@@ -207,10 +206,10 @@
                  ;; many remote machines via ssh
                  ;; https://github.com/killme2008/clojure-control
                  [control "0.4.1"]
-                 
-                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Text Mining
-                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                  ;; http://gate.ac.uk/
                  ;; http://mvnrepository.com/artifact/uk.ac.gate
@@ -232,15 +231,60 @@
                  ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
                  [weka/weka "3.6.7"]
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Hadoop/HBase/Ecosystem
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
                  ;; https://github.com/alexott/clojure-hadoop
                  ;; http://alexott.net/en/clojure/ClojureHadoop.html
                  [clojure-hadoop "1.4.1"]
 
+                 [org.apache.hbase/hbase "0.92.1"]
+                 ;; https://github.com/davidsantiago/clojure-hbase
+                 ;; [clojure-hbase "0.90.5-4"]
+                 ;; https://github.com/compasslabs/clojure-hbase-schemas
+                 ;; FIXME: [clj-serializer "0.1.1"] -> clojure-contrib
+                 ;; [com.compasslabs/clojure-hbase-schemas "0.90.4.4"]
+
+                 ;; https://github.com/urbanairship/statshtable
+                 ;; [com.urbanairship/statshtable "1.3.0"]
+                 
+                 ;; https://github.com/OpenTSDB/asynchbase
+                 [org.hbase/asynchbase "1.3.2"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Devops/Sysadmin
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
                  ;; A clojure DSL for system admin and deployment with
                  ;; many remote machines via ssh
                  ;; https://github.com/killme2008/clojure-control
                  [control "0.4.1"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; JVM/JAVA/System/Instrumentation
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
+                 ;; Sigmund is friendly clojure wrapper around the Hyperic SIGAR API
+                 ;; http://www.hyperic.com/products/sigar. It can tell you all sorts
+                 ;; of information about your currently executing process as well as
+                 ;; the system that you are working on.
+                 ;; https://github.com/zcaudate/sigmund
+                 [sigmund "0.1.1"]
+
+                 ;; https://github.com/clojure/java.jmx
+                 ;; Doc: http://clojure.github.com/java.jmx/
+                 [org.clojure/java.jmx "0.2.0"]
+
+                 ;; https://github.com/clojure/java.classpath
+                 ;; Doc: http://clojure.github.com/java.classpath/
+                 [org.clojure/java.classpath "0.2.0"]
+                 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Development/Productivity/Tools
@@ -254,6 +298,14 @@
                  ;; Clojure-complete is an symbol completion library for Clojure.
                  ;; The code is adapted from jochu/swank-clojure.
                  [clojure-complete "0.2.1"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; https://github.com/llasram/inet.data
+                 ;; Inet.data is a library for modeling various Internet-related
+                 ;; conceptual entities as data, supporting applications which
+                 ;; are about the modeled entities versus interfacing with them.
+                 [inet.data "0.5.1"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
@@ -280,10 +332,8 @@
                  ;; [org.clojure/data.xml "0.0.3-SNAPSHOT"]
                  
                  [org.clojure/data.zip "0.1.1"]
-                 [org.clojure/java.classpath "0.2.0"]
                  [org.clojure/java.data "0.1.1"]
                  [org.clojure/java.jdbc "0.1.1"]
-                 [org.clojure/java.jmx "0.2.0"]
                  [org.clojure/math.combinatorics "0.0.2"]
                  [org.clojure/math.numeric-tower "0.0.1"]
                  ;; [org.clojure/test.benchmark "0.1.0-SNAPSHOT"]
