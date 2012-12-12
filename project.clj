@@ -239,9 +239,14 @@
                  
                  ;; https://github.com/alexott/clojure-hadoop
                  ;; http://alexott.net/en/clojure/ClojureHadoop.html
-                 [clojure-hadoop "1.4.1"]
+                 ;; [clojure-hadoop "1.4.1"]
 
-                 [org.apache.hbase/hbase "0.92.1"]
+                 ;; http://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client/2.0.1-alpha
+                 ;; [org.apache.hadoop/hadoop-client "2.0.1-alpha"]
+                 [org.apache.hadoop/hadoop-client "2.0.0-cdh4.1.2"]
+                 
+                 ;; [org.apache.hbase/hbase "0.92.1"]
+                 [org.apache.hbase/hbase "0.92.1-cdh4.1.2"]
                  ;; https://github.com/davidsantiago/clojure-hbase
                  ;; [clojure-hbase "0.90.5-4"]
                  ;; https://github.com/compasslabs/clojure-hbase-schemas
@@ -252,7 +257,7 @@
                  ;; [com.urbanairship/statshtable "1.3.0"]
                  
                  ;; https://github.com/OpenTSDB/asynchbase
-                 [org.hbase/asynchbase "1.3.2"]
+                 ;; [org.hbase/asynchbase "1.3.2"]
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Devops/Sysadmin
@@ -351,7 +356,7 @@
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
                  "local" ~(str (.toURI (java.io.File. "maven_repo")))
-                 }
+                 "cloudera-repos" "https://repository.cloudera.com/artifactory/cloudera-repos/"}
   ;; :resource-paths ["resource"]
   )
 
