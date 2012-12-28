@@ -14,7 +14,10 @@
                                            WritableByteArrayComparable
                                            BinaryComparator
                                            SingleColumnValueFilter
-                                           PrefixFilter))
+                                           PrefixFilter
+                                           QualifierFilter
+                                           FamilyFilter
+                                           FilterList))
   (:require [clojure.pprint :as p]))
 
 ;;  A file called hbase-site.xml lives in the conf directory inside the HBase
@@ -116,6 +119,30 @@
                              (value-fn (.getValue result family qualifier))))
             kv-map))))))
 
+(defn get-configuration
+  [table-name]
+  (let [conf (.getConfiguration (hb/table table-name))
+        conf-iterator (.iterator conf)]
+    (loop [entry (try
+                   (.next conf-iterator)
+                   (catch java.util.NoSuchElementException _ nil))
+           result {}]
+      (if entry
+        (recur (try
+                 (.next conf-iterator)
+                 (catch java.util.NoSuchElementException _ nil))
+               (assoc result (.getKey entry) (.getValue entry)))
+        result))))
+
+(defn get-configuration*
+  [table-name]
+  (let [conf (.getConfiguration (hb/table table-name))]
+    (into {} conf)))
+
+(defn get-configuration-obj
+  [table-name]
+  (.getConfiguration (hb/table table-name)))
+
 (defn server-load
   [cluster-status server & [regions-load?]]
   (let [load (.getLoad cluster-status server)
@@ -160,3 +187,22 @@
             :requests-count (.getRequestsCount status)
             :servers-size (.getServersSize status)
             :version (.getVersion status)})))
+
+;;;
+(defn count-rows-with-column
+  [table-name column-family qualifier]
+  (let [qualifier-filter (QualifierFilter. CompareFilter$CompareOp/EQUAL
+                                           (BinaryComparator. (Bytes/toBytes qualifier)))
+        family-filter (FamilyFilter. CompareFilter$CompareOp/EQUAL
+                                     (BinaryComparator. (Bytes/toBytes column-family)))]
+    (hb/with-table [table (hb/table table-name)]
+      (hb/with-scanner [scanner (hb/scan table
+                                         :caching 100000
+                                         :filter (FilterList. [qualifier-filter family-filter]))]
+        (loop [n 0]
+          (let [result (.next scanner 10000)
+                num-result (count result)]
+            (if (seq result)
+              (recur (+ n num-result))
+              n)))))))
+
