@@ -190,12 +190,45 @@
             :servers-size (.getServersSize status)
             :version (.getVersion status)})))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Filters
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn row-filter-with-regex
+  [regex]
+  (RowFilter. CompareFilter$CompareOp/EQUAL (RegexStringComparator. regex)))
+
+
+(defn column-filter
+  [column-family qualifier]
+  (let [qualifier-filter (QualifierFilter. CompareFilter$CompareOp/EQUAL
+                                           (BinaryComparator. (Bytes/toBytes qualifier)))
+        family-filter (FamilyFilter. CompareFilter$CompareOp/EQUAL
+                                     (BinaryComparator. (Bytes/toBytes column-family)))]
+    (FilterList. [qualifier-filter family-filter])))
+
+
+(defn qualifier-filter
+  [qualifier]
+  (QualifierFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes qualifier))))
+
+
+(defn family-filter
+  [family]
+  (FamilyFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes family))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Count
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn count-rows-with-filters
   [table-name filters]
   (hb/with-table [table (hb/table table-name)]
     (hb/with-scanner [scanner (hb/scan table
                                        :caching 100000
-                                       :filter (FilterList. filters))]
+                                       :filter (if (instance? FilterList filters)
+                                                 filters
+                                                 (FilterList. filters)))]
       (loop [n 0]
         (let [result (.next scanner 10000)
               num-result (count result)]
@@ -203,19 +236,16 @@
             (recur (+ n num-result))
             n))))))
 
-;;;
+
 (defn count-rows-with-column
   [table-name column-family qualifier]
-  (let [qualifier-filter (QualifierFilter. CompareFilter$CompareOp/EQUAL
-                                           (BinaryComparator. (Bytes/toBytes qualifier)))
-        family-filter (FamilyFilter. CompareFilter$CompareOp/EQUAL
-                                     (BinaryComparator. (Bytes/toBytes column-family)))]
-    (count-rows-with-filters table-name [qualifier-filter family-filter])))
+  (let [filters [(qualifier-filter qualifier) (family-filter column-family)]]
+    (count-rows-with-filters table-name filters)))
+
 
 (defn count-rows-with-suffix
   "WARNING: Uses RegexStringComparator, so be sure to escape characters with special meaning in a regex."
   [table-name suffix]
-  (let [row-filter (RowFilter. CompareFilter$CompareOp/EQUAL
-                               (RegexStringComparator. (format "^.*%s$" suffix)))]
+  (let [row-filter (row-filter-with-regex (format "^.*%s$" suffix))]
     (count-rows-with-filters table-name [row-filter])))
 
