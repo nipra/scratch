@@ -17,7 +17,9 @@
                                            PrefixFilter
                                            QualifierFilter
                                            FamilyFilter
-                                           FilterList))
+                                           FilterList
+                                           RowFilter
+                                           RegexStringComparator))
   (:require [clojure.pprint :as p]))
 
 ;;  A file called hbase-site.xml lives in the conf directory inside the HBase
@@ -188,6 +190,19 @@
             :servers-size (.getServersSize status)
             :version (.getVersion status)})))
 
+(defn count-rows-with-filters
+  [table-name filters]
+  (hb/with-table [table (hb/table table-name)]
+    (hb/with-scanner [scanner (hb/scan table
+                                       :caching 100000
+                                       :filter (FilterList. filters))]
+      (loop [n 0]
+        (let [result (.next scanner 10000)
+              num-result (count result)]
+          (if (seq result)
+            (recur (+ n num-result))
+            n))))))
+
 ;;;
 (defn count-rows-with-column
   [table-name column-family qualifier]
@@ -195,14 +210,12 @@
                                            (BinaryComparator. (Bytes/toBytes qualifier)))
         family-filter (FamilyFilter. CompareFilter$CompareOp/EQUAL
                                      (BinaryComparator. (Bytes/toBytes column-family)))]
-    (hb/with-table [table (hb/table table-name)]
-      (hb/with-scanner [scanner (hb/scan table
-                                         :caching 100000
-                                         :filter (FilterList. [qualifier-filter family-filter]))]
-        (loop [n 0]
-          (let [result (.next scanner 10000)
-                num-result (count result)]
-            (if (seq result)
-              (recur (+ n num-result))
-              n)))))))
+    (count-rows-with-filters table-name [qualifier-filter family-filter])))
+
+(defn count-rows-with-suffix
+  "WARNING: Uses RegexStringComparator, so be sure to escape characters with special meaning in a regex."
+  [table-name suffix]
+  (let [row-filter (RowFilter. CompareFilter$CompareOp/EQUAL
+                               (RegexStringComparator. (format "^.*%s$" suffix)))]
+    (count-rows-with-filters table-name [row-filter])))
 
