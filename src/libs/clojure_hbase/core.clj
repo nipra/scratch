@@ -1,6 +1,7 @@
 (ns libs.clojure-hbase.core
   (:refer-clojure :rename {get map-get})
   (:use libs.clojure-hbase.internal)
+  (:require [libs.clojure-hbase [util :as hu]])
   (:import [org.apache.hadoop.hbase HBaseConfiguration HConstants KeyValue]
            [org.apache.hadoop.hbase.client HTable
             HTablePool Get Put Delete Scan Result RowLock]
@@ -87,7 +88,7 @@
   [arg]
   (to-bytes-impl arg))
 
-(defn as-map
+(defn as-map-old
   "Extracts the contents of the Result object and sticks them into a 3-level
    map, indexed by family, qualifier, and then timestamp.
 
@@ -112,7 +113,33 @@
                  (assoc-in kv-map [family qualifier timestamp] value)))
         kv-map))))
 
-(defn latest-as-map
+(defn as-map
+  "Extracts the contents of the Result object and sticks them into a 3-level
+   map, indexed by family, qualifier, and then timestamp.
+
+   Functions can be passed in with arguments :map-family, :map-qualifier,
+   :map-timestamp, and :map-value. You can also use :map-default to pick a
+   default function, which will be overriden by the more specific directives."
+  [#^Result result & args]
+  (let [options      (into {} (map vec (partition 2 args)))
+        default-fn   (map-get options :map-default identity)
+        family-fn    (map-get options :map-family default-fn)
+        qualifier-fn (map-get options :map-qualifier default-fn)
+        timestamp-fn (map-get options :map-timestamp default-fn)
+        value-fn     (map-get options :map-value default-fn)]
+    (loop [remaining-kvs (seq (.raw result))
+           kv-map {}]
+      (if-let [^KeyValue kv (first remaining-kvs)]
+        (let [row-key (hu/as-str (.getRow kv))
+              family    (family-fn (.getFamily kv))
+              qualifier (qualifier-fn (.getQualifier kv))
+              timestamp (timestamp-fn (.getTimestamp kv))
+              value     (value-fn (.getValue kv))]
+          (recur (next remaining-kvs)
+                 (assoc-in kv-map [row-key family qualifier timestamp] value)))
+        kv-map))))
+
+(defn latest-as-map-old
   "Extracts the contents of the Result object and sticks them into a 2-level
    map, indexed by family and qualifier. The latest timestamp is used.
 
@@ -139,6 +166,39 @@
           (if-let [[family qualifier] (first remaining-keys)]
             (recur (next remaining-keys)
                    (assoc-in kv-map [(family-fn family)
+                                     (qualifier-fn qualifier)]
+                             (value-fn (.getValue result family qualifier))))
+            kv-map))))))
+
+(defn latest-as-map
+  "Extracts the contents of the Result object and sticks them into a 2-level
+   map, indexed by family and qualifier. The latest timestamp is used.
+
+   Functions can be passed in with arguments :map-family, :map-qualifier,
+   and :map-value. You can also use :map-default to pick a default function,
+   which will be overriden by the more specific directives."
+  [#^Result result & args]
+  (let [options      (into {} (map vec (partition 2 args)))
+        default-fn   (map-get options :map-default identity)
+        family-fn    (map-get options :map-family default-fn)
+        qualifier-fn (map-get options :map-qualifier default-fn)
+        value-fn     (map-get options :map-value default-fn)]
+    (loop [remaining-kvs (seq (.raw result))
+           keys #{}]
+      (if-let [^KeyValue kv (first remaining-kvs)]
+        (let [family    (.getFamily kv)
+              qualifier (.getQualifier kv)
+              row-key (hu/as-str (.getRow kv))]
+          (recur (next remaining-kvs)
+                 (conj keys [row-key family qualifier])))
+        ;; At this point, we have a duplicate-less list of [f q] keys in keys.
+        ;; Go back through, pulling the latest values for these keys.
+        (loop [remaining-keys keys
+               kv-map {}]
+          (if-let [[row-key family qualifier] (first remaining-keys)]
+            (recur (next remaining-keys)
+                   (assoc-in kv-map [row-key
+                                     (family-fn family)
                                      (qualifier-fn qualifier)]
                              (value-fn (.getValue result family qualifier))))
             kv-map))))))

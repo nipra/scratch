@@ -1,6 +1,5 @@
 (ns libs.clojure-hbase.util
   (:refer-clojure :rename {get map-get})
-  (:use libs.clojure-hbase.core)
   (:import org.apache.hadoop.hbase.util.Bytes))
 
 ;; Utility functions that may be helpful in using the library.
