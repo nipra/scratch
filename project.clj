@@ -49,10 +49,10 @@
                  ;; Langohr is a Clojure wrapper around the RabbitMQ Java client
                  [com.novemberain/langohr "1.0.0-beta2"]
 
-                 ;; [org.mongodb/mongo-java-driver "2.6.3"]
+                 ;; [org.mongodb/mongo-java-driver "2.10.1"]
                  ;; Monger is an idiomatic Clojure MongoDB driver for a more
                  ;; civilized age.
-                 [com.novemberain/monger "1.0.0-beta8"]
+                 [com.novemberain/monger "1.4.1"]
                  
                  ;; http://neo4j.org/download/
                  [org.neo4j/neo4j "1.7.1"]
@@ -144,6 +144,10 @@
                  ;; https://github.com/liebke/incanter
                  [incanter "1.3.0"]
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Web
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
                  ;; https://github.com/weavejester/compojure/
                  [compojure "1.1.1"]
                  ;; https://github.com/ring-clojure/ring
@@ -152,6 +156,18 @@
                  ;; https://github.com/ibdknox/noir
                  ;; A framework for writing clojure websites.
                  [noir "1.2.2"]
+                 
+                 ;; A library heavily inspired by the excellent Ruby library
+                 ;; SimpleForm, offering a series of functions for quickly
+                 ;; generating forms.
+                 ;; https://github.com/asmala/clj-simple-form
+                 [clj-simple-form "0.1.0"]
+
+                 ;; Fast library for rendering HTML in Clojure
+                 ;; https://github.com/weavejester/hiccup
+                 [hiccup "1.0.2"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                  ;;
                  [org.slf4j/slf4j-api "1.6.4"]
@@ -346,7 +362,7 @@
                  [org.clojure/tools.cli "0.2.1"]
                  [org.clojure/tools.logging "0.2.3"]
                  [org.clojure/tools.macro "0.1.1"]
-                 [org.clojure/tools.namespace "0.1.2"]
+                 [org.clojure/tools.namespace "0.2.0"]
                  [org.clojure/tools.nrepl "0.0.5"]
                  [org.clojure/tools.trace "0.7.3"]]
 
