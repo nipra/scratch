@@ -34,7 +34,35 @@
                  ;; http://jsr-108.sourceforge.net/javadoc/index.html
                  ;; [javax.units/jsr108 "0.01"] 
 
-                 [org.clojars.tavisrudd/redis-clojure "1.3.1"]
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Redis
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; Clojure Redis client & message queue
+                 ;; https://github.com/ptaoussanis/carmine
+                 [com.taoensso/carmine "1.2.1"]
+                 
+                 ;; redis-clojure is the oldest of several Clojure client libraries for Redis.
+                 ;; If you are currently trying to choose which of these client libraries to use,
+                 ;; I (tavisrudd) recommend using Carmine instead. It has better documentation,
+                 ;; better connection pooling, support for newer features of Redis 2.0+, Leiningen 2.0
+                 ;; support, more flexible serialization, and is faster.
+                 ;; https://github.com/tavisrudd/redis-clojure
+                 [org.clojars.tavisrudd/redis-clojure "1.3.2"]
+
+                 ;; Clojure Redis client library
+                 ;; https://github.com/mmcgrana/clj-redis
+                 [clj-redis "0.0.12"]
+
+                 ;; A Clojure library for redis
+                 ;; https://github.com/abedra/accession
+                 [accession "0.1.1" :exclusions [org.clojure/clojure]]
+
+                 ;; Redis client library for clojure
+                 ;; https://github.com/wallrat/labs-redis-clojure
+                 ;; [labs-redis "0.1.0"]
+                 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                  ;; A tiny library wrapping language-detect that can be used
                  ;; to determine the language of a particular piece of text.
@@ -327,6 +355,10 @@
                  ;; conceptual entities as data, supporting applications which
                  ;; are about the modeled entities versus interfacing with them.
                  [inet.data "0.5.1"]
+
+                 ;; Clojure library for fake data generation, port of ruby faker
+                 ;; https://github.com/paraseba/faker
+                 [faker "0.2.2"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
@@ -366,7 +398,9 @@
                  [org.clojure/tools.nrepl "0.0.5"]
                  [org.clojure/tools.trace "0.7.3"]]
 
-  :dev-dependencies [[swank-clojure "1.4.0"]]
+  :dev-dependencies [[swank-clojure "1.4.0"]
+                     [lein-localrepo "0.3"]
+                     [clj-ns-browser "1.3.0"]]
   :repositories {
                  ;; Required for snapshots.
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
