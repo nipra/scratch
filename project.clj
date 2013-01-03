@@ -315,7 +315,7 @@
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                 ;; JVM/JAVA/System/Instrumentation
+                 ;; JVM/JAVA/System/Instrumentation/Optimization/Profiling
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  
                  ;; Sigmund is friendly clojure wrapper around the Hyperic SIGAR API
@@ -332,6 +332,10 @@
                  ;; https://github.com/clojure/java.classpath
                  ;; Doc: http://clojure.github.com/java.classpath/
                  [org.clojure/java.classpath "0.2.0"]
+
+                 ;; Benchmarking library for clojure
+                 ;; https://github.com/hugoduncan/criterium
+                 [criterium "0.3.1"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
