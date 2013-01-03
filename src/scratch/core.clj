@@ -22,7 +22,8 @@
                              [giddyup :as giddyup]))
   (:require (inet.data [ip :as ip]
                        [dns :as dns]))
-  (:require [inet.data.format.psl :as psl]))
+  (:require [inet.data.format.psl :as psl])
+  (:require (criterium [core :as crit])))
 
 (comment
   (def *img
@@ -102,5 +103,5 @@
      
     
 (comment
-  )
+  (crit/with-progress-reporting (crit/bench (reduce + (range 100)) :verbose)))
 
