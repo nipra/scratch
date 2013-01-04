@@ -1,6 +1,6 @@
-(ns mongo.populate.qna
+(ns mongo.qna.populate
   (:use [monger.core :only [connect! connect set-db! get-db connect set-default-write-concern!]]
-        [monger.collection :only [insert insert-batch]])
+        [monger.collection :only [insert insert-batch update]])
   (:require (monger [core :as monger]
                     [collection :as coll]
                     [joda-time :as joda]
@@ -18,7 +18,8 @@
   (:import [org.bson.types ObjectId]
            [com.mongodb DB WriteConcern])
   (:require (clj-time [core :as ctc]))
-  (:require [clojure.pprint :as p]))
+  (:require (clojure [pprint :as p]
+                     set)))
 
 (comment
   (do
@@ -27,6 +28,7 @@
 
 (defonce user-ids (atom []))
 (defonce question-ids (atom []))
+(defonce answer-ids (atom []))
 
 (defn populate-users
   [& {:keys [n] :or {n 1000}}]
@@ -54,39 +56,34 @@
     (dotimes [_ n]
       (let [id (ObjectId.)
             asked-by (rand-nth user-ids)
-            followed-by (distinct (conj (take (rand-int 100)
-                                              (repeatedly 1000 #(rand-nth user-ids)))
-                                        asked-by))]
+            followers (distinct (conj (take (rand-int 100)
+                                            (repeatedly 1000 #(rand-nth user-ids)))
+                                      asked-by))]
         (insert "questions" {:_id id
                              :title (generate-random-question)
                              :description (first (fl/paragraphs 5))
                              :created-at (ctc/minus (ctc/now) (ctc/days (rand-int 1000)))
                              :asked-by asked-by
-                             :followed-by followed-by})
+                             :followers followers})
         (swap! question-ids conj id)))))
-
-(defn- random-voters
-  [user-id]
-  (remove (partial = user-id)
-          (take (rand-int 500)
-                (distinct (repeatedly 1000 #(rand-nth user-ids))))))
 
 (defn populate-answers
   []
   (let [user-ids @user-ids
         question-ids @question-ids]
+    (alter-var-root (var answer-ids) (constantly (atom [])))
     (doseq [question-id question-ids]
       (let [user-ids (take (rand-int 10) (distinct (repeatedly 10 #(rand-nth user-ids))))]
         (doseq [user-id user-ids]
           (let [id (ObjectId.)
                 asked-at (:created-at (coll/find-map-by-id "questions" question-id [:created-at]))
                 created-at (ctc/plus asked-at (ctc/days (rand-int 30)))
-                random-voters (fn [user-id]
+                random-voters (fn [n user-id]
                                 (remove (partial = user-id)
-                                        (take (rand-int 500)
+                                        (take (rand-int n)
                                               (distinct (repeatedly 1000 #(rand-nth user-ids))))))
-                upvoters (random-voters user-id)
-                downvoters (clojure.set/difference (set (random-voters user-id))
+                upvoters (random-voters 500 user-id)
+                downvoters (clojure.set/difference (set (random-voters 50 user-id))
                                                    (set upvoters))
                 votes (- (count upvoters) (count downvoters))
                 answer {:_id id
@@ -96,8 +93,27 @@
                         :upvoters upvoters
                         :downvoters downvoters
                         :votes votes
-                        :created-at created-at}]
-            (insert "answers" answer)))))))
+                        :created-at created-at
+                        :comments []}]
+            (insert "answers" answer)
+            (swap! answer-ids conj id)))))))
+
+(defn populate-comments
+  []
+  (let [user-ids @user-ids
+        answer-ids @answer-ids]
+    (doseq [answer-id answer-ids]
+      (let [user-ids (take (rand-int 10) (distinct (repeatedly 10 #(rand-nth user-ids))))]
+        (doseq [user-id user-ids]
+          (let [id (ObjectId.)
+                answered-at (:created-at (coll/find-map-by-id "answers" answer-id [:created-at]))
+                created-at (ctc/plus answered-at (ctc/minutes (rand-int 720)))
+                comment {:_id id
+                         :text (first (fl/paragraphs))
+                         :commented-by user-id
+                         :answer-id answer-id}]
+            (insert "comments" comment)
+            (update "answers" {:_id answer-id} {"$push" {:comments id}})))))))
 
 (comment
   (coll/find-one-as-map "users" {:age {"$gte" 20}})
@@ -105,16 +121,24 @@
               (query/find {:downvoters {"$ne" []}})
               (query/limit 2)
               (query/skip 4)))
-  (coll/count "answers" {:downvoters {"$ne" []}}))
+  (coll/count "answers" {:downvoters {"$ne" []}})
+  (coll/count "answers" {:votes {"$gte" 100 }})
+  (p/pprint (query/with-collection "answers"
+              (query/find {})
+              (query/sort {:upvoters -1})
+              (query/limit 1))))
 
 (comment
-  (let [n 10]
+  (let [n 10000]
     (coll/drop "users")
     (coll/drop "questions")
     (coll/drop "answers")
+    (coll/drop "comments")
     (populate-users :n n)
     (populate-questions :n n)
-    (populate-answers :n n))
+    (populate-answers)
+    (populate-comments))
   (do
     (def user-ids (atom []))
-    (def question-ids (atom []))))
+    (def question-ids (atom []))
+    (def answer-ids (atom []))))
