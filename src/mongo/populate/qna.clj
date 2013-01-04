@@ -72,7 +72,7 @@
                 (distinct (repeatedly 1000 #(rand-nth user-ids))))))
 
 (defn populate-answers
-  [& {:keys [n] :or {n 1000}}]
+  []
   (let [user-ids @user-ids
         question-ids @question-ids]
     (doseq [question-id question-ids]
@@ -114,4 +114,7 @@
     (coll/drop "answers")
     (populate-users :n n)
     (populate-questions :n n)
-    (populate-answers :n n)))
+    (populate-answers :n n))
+  (do
+    (def user-ids (atom []))
+    (def question-ids (atom []))))
