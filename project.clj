@@ -231,6 +231,14 @@
                  ;; https://github.com/clojurewerkz/support
                  [clojurewerkz/support "0.6.0"]
 
+                 ;; a set of libraries used inside Facebook java projects, internal
+                 ;; and open source.
+                 ;; https://github.com/facebook/jcommon
+                 ;; Latest is 0.1.5. Fail to download.
+                 [com.facebook.jcommon/jcommon-all "0.1.3"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
                  ;; Clojure HTTP library using the Apache HttpClient.
                  ;; https://github.com/rnewman/clj-apache-http
                  ;; [com.twinql.clojure/clj-apache-http "2.3.1"]
