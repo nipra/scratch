@@ -391,6 +391,7 @@
                  [org.clojure/data.codec "0.1.0"]
                  [org.clojure/data.csv "0.1.0"]
                  [org.clojure/data.finger-tree "0.0.1"]
+                 ;; https://github.com/clojure/data.json
                  [org.clojure/data.json "0.2.0"]
                  [org.clojure/data.priority-map "0.0.1"]
 
