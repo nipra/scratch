@@ -80,7 +80,7 @@
                  ;; [org.mongodb/mongo-java-driver "2.10.1"]
                  ;; Monger is an idiomatic Clojure MongoDB driver for a more
                  ;; civilized age.
-                 [com.novemberain/monger "1.4.1"]
+                 [com.novemberain/monger "1.4.2"]
                  
                  ;; http://neo4j.org/download/
                  [org.neo4j/neo4j "1.7.1"]
@@ -141,8 +141,8 @@
                  ;; Clojure JSON and JSON SMILE (binary json format)
                  ;; encoding/decoding
                  ;; https://github.com/dakrone/cheshire
-                 [cheshire "4.0.0"]
-
+                 [cheshire "5.0.1"]
+                 
                  ;; Enhanced try and throw for Clojure leveraging Clojure's
                  ;; capabilities 
                  ;; https://github.com/scgilardi/slingshot
@@ -229,7 +229,7 @@
                  ;; A support library ClojureWerkz projects (Langohr, Monger,
                  ;; Neocons, Elastisch, Quartzite, Money, etc) can rely on
                  ;; https://github.com/clojurewerkz/support
-                 [clojurewerkz/support "0.6.0"]
+                 [clojurewerkz/support "0.10.0"]
 
                  ;; a set of libraries used inside Facebook java projects, internal
                  ;; and open source.
