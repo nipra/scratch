@@ -3,10 +3,18 @@
   (:require [libs.clojure-hbase [core :as hb] [util :as hu] [admin :as ha]])
   (:require [libs.com.compass.hbase.client :as c])
   (:require [clojure.java.classpath :as cp])
+  (:import (org.apache.hadoop.fs Path))
   (:import [java.util Set]
-           [org.apache.hadoop.hbase HBaseConfiguration HConstants KeyValue]
+           (org.apache.hadoop.hbase HBaseConfiguration
+                                    HTableDescriptor
+                                    HConstants
+                                    KeyValue
+                                    TableNotFoundException)
            (org.apache.hadoop.hbase.client HTable
-                                           HTablePool Get Put Delete Scan Result RowLock)
+                                           HTablePool
+                                           HBaseAdmin
+                                           RowLock
+                                           Get Put Delete Scan Result)
            [org.apache.hadoop.hbase.util Bytes])
   (:import (org.apache.hadoop.hbase.filter ValueFilter
                                            CompareFilter
@@ -83,6 +91,79 @@
 (defn get-configuration-obj
   [table-name]
   (.getConfiguration (hb/table table-name)))
+
+;;;
+(defn get-table-descriptor
+  [table-name]
+  (try
+    (.getTableDescriptor (ha/hbase-admin) (Bytes/toBytes table-name))
+    (catch TableNotFoundException _ :table-not-found)))
+
+(defn get-column-family-details*
+  [column-descriptor]
+  (let [entries (seq (.getValues column-descriptor))
+        details (into {}
+                      (for [entry entries
+                            :let [k (hu/as-str (.get (.getKey entry)))
+                                  v (hu/as-str (.get (.getValue entry)))]]
+                        [k v]))]
+    (assoc details "NAME" (.getNameAsString column-descriptor))))
+
+(defn get-column-family-details
+  [column-descriptor]
+  (let [ttl (.getTimeToLive column-descriptor)
+        ttl-days (float (/ ttl 3600 24))]
+    {:blocksize (.getBlocksize column-descriptor)
+     :bloom-filter-type (.getBloomFilterType column-descriptor)
+     :compaction-compression-type (.getCompactionCompressionType column-descriptor)
+     :max-versions (.getMaxVersions column-descriptor)
+     :min-versions (.getMinVersions column-descriptor)
+     :name (.getNameAsString column-descriptor)
+     :scope (.getScope column-descriptor)
+     :ttl ttl
+     :ttl-days ttl-days
+     :block-cache-enabled? (.isBlockCacheEnabled column-descriptor)
+     :in-memory? (.isInMemory column-descriptor)}))
+
+;;; 
+(defmulti get-table-details class)
+
+(defmethod get-table-details HTableDescriptor
+  [table-descriptor]
+  (let [column-descriptors (.getFamilies table-descriptor)
+        families (map #(.getNameAsString %) column-descriptors)
+        max-file-size (.getMaxFileSize table-descriptor)
+        mem-store-flush-size (.getMemStoreFlushSize table-descriptor)]
+    {:table (.getNameAsString table-descriptor)
+     :families families
+     :families-details (map get-column-family-details column-descriptors)
+     :max-file-size max-file-size
+     :max-file-size-in-MB (float (/ max-file-size 1024 1024))
+     :mem-store-flush-size mem-store-flush-size
+     :mem-store-flush-size-in-MB (float (/ mem-store-flush-size 1024 1024))
+     :owner-string (.getOwnerString table-descriptor)
+     :region-split-policy-classname (.getRegionSplitPolicyClassName table-descriptor)
+     :read-only? (.isReadOnly table-descriptor)}))
+
+(defmethod get-table-details String
+  [table-name]
+  (let [table-descriptor (get-table-descriptor table-name)]
+    (get-table-details table-descriptor)))
+
+;;; 
+(defn list-tables
+  ([]
+     (list-tables false))
+  ([detailed?]
+     (let [htable-descriptors (seq (.listTables (ha/hbase-admin)))]
+       (if detailed?
+         (map get-table-details htable-descriptors)
+         (map #(.getNameAsString %) htable-descriptors))))
+  ([pattern detailed?]
+     (let [htable-descriptors (seq (.listTables (ha/hbase-admin) pattern))]
+       (if detailed?
+         (map get-table-details htable-descriptors)
+         (map #(.getNameAsString %) htable-descriptors)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Stats/Status
