@@ -95,9 +95,7 @@
 ;;;
 (defn get-table-descriptor
   [table-name]
-  (try
-    (.getTableDescriptor (ha/hbase-admin) (Bytes/toBytes table-name))
-    (catch TableNotFoundException _ :table-not-found)))
+  (.getTableDescriptor (ha/hbase-admin) (Bytes/toBytes table-name)))
 
 (defn get-column-family-details*
   [column-descriptor]
@@ -147,8 +145,10 @@
 
 (defmethod get-table-details String
   [table-name]
-  (let [table-descriptor (get-table-descriptor table-name)]
-    (get-table-details table-descriptor)))
+  (try
+    (let [table-descriptor (get-table-descriptor table-name)]
+      (get-table-details table-descriptor))
+    (catch TableNotFoundException _ :table-not-found)))
 
 ;;; 
 (defn list-tables
