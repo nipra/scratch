@@ -421,5 +421,5 @@
                  "local" ~(str (.toURI (java.io.File. "maven_repo")))
                  "cloudera-repos" "https://repository.cloudera.com/artifactory/cloudera-repos/"}
   ;; :resource-paths ["resource"]
-  )
+  :main scratch.main)
 
