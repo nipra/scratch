@@ -10,7 +10,9 @@
                                            FamilyFilter
                                            FilterList
                                            RowFilter
-                                           RegexStringComparator)
+                                           RegexStringComparator
+                                           ColumnRangeFilter
+                                           ColumnPrefixFilter)
            (org.apache.hadoop.hbase.util Bytes)))
 
 (defn row-filter-with-regex
@@ -36,4 +38,12 @@
   [family]
   (FamilyFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes family))))
 
+;;; Column filters
+(defn column-range-filter
+  [min-column max-column]
+  (ColumnRangeFilter. (Bytes/toBytes min-column) true
+                      (Bytes/toBytes max-column) true))
 
+(defn column-prefix-filter
+  [prefix]
+  (ColumnPrefixFilter. (Bytes/toBytes prefix)))
