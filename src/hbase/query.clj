@@ -10,8 +10,15 @@
 (defn- sanitize-opts
   [opts]
   (mapcat identity
-          (remove #(empty? (second %))
+          (remove #(nil? (second %))
                   (partition 2 opts))))
+
+(defn- sanitize-filters
+  [filters]
+  (when filters
+    (if (instance? FilterList filters)
+      filters
+      (FilterList. filters))))
 
 (defn- get*
   [table row-key & opts]
@@ -19,9 +26,12 @@
     (apply (partial hb/get table row-key) opts*)))
 
 (defn fetch-row
-  [table-name row-key & {:keys [row-as columns] :or {row-as utils/as-vector}}]
+  [table-name row-key & {:keys [row-as columns filters]
+                         :or {row-as utils/as-vector}}]
   (hb/with-table [table (hb/table table-name)]
-    (row-as (get* table (Bytes/toBytes row-key) :columns columns))))
+    (row-as (get* table (Bytes/toBytes row-key)
+                  :columns columns
+                  :filter (sanitize-filters filters)))))
 
 (defn- fetch-rows*
   [scanner limit batch row-as]
@@ -38,7 +48,10 @@
 
 (defn fetch-rows
   [table-name start-row end-row & {:keys [limit caching batch row-as]
-                                   :or {limit 10 caching 1000 batch 100 row-as utils/as-vector}}]
+                                   :or {limit 10
+                                        caching 1000
+                                        batch 100
+                                        row-as utils/as-vector}}]
   (hb/with-table [table (hb/table table-name)]
     (hb/with-scanner [scanner (hb/scan table
                                        :start-row start-row
@@ -48,7 +61,10 @@
 
 (defn fetch-rows-with-suffix
   [table-name suffix & {:keys [limit caching batch row-as]
-                        :or {limit 10 caching 1000 batch 100 row-as utils/as-vector}}]
+                        :or {limit 10
+                             caching 1000
+                             batch 100
+                             row-as utils/as-vector}}]
   (let [row-filter (f/row-filter-with-regex (format "^.*%s$" suffix))]
     (hb/with-table [table (hb/table table-name)]
       (hb/with-scanner [scanner (hb/scan table
@@ -58,7 +74,12 @@
 
 (comment
   (fetch-row "table" "row-key")
-  (fetch-row "table" "row-key" :columns ["column-family1" ["column-qualifier1" "column-qualifier2"]])
+  (fetch-row "table" "row-key"
+             :columns ["column-family1" ["column-qualifier1" "column-qualifier2"]])
+  (let [f1 (f/column-range-filter "min" "max")
+        f2 (f/column-prefix-filter "pre")]
+    [(fetch-row "table-name" "row-key" :filters [f1])
+     (fetch-row "table-name" "row-key" :filters [f1 f2])])
 
   (fetch-rows "table-name" "start-row" "end-row" :row-as utils/result->key)
   (fetch-rows "table-name" "start-row" "end-row" :row-as utils/as-map)
