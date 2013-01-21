@@ -59,13 +59,18 @@
   [x]
   (Bytes/toLong x))
 
+(defn result->key
+  [result]
+  (hu/as-str (.getRow result)))
+
 (defn as-vector
   [result]
-  (hb/as-vector result
-                :map-value hu/as-str
-                :map-family hu/as-str
-                :map-qualifier hu/as-str
-                :map-timestamp ctco/from-long))
+  (map #(cons (result->key result) %)
+       (hb/as-vector result
+                     :map-value hu/as-str
+                     :map-family hu/as-str
+                     :map-qualifier hu/as-str
+                     :map-timestamp ctco/from-long)))
 
 (defn as-map
   [result]
