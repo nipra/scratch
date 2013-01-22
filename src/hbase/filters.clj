@@ -15,11 +15,6 @@
                                            ColumnPrefixFilter)
            (org.apache.hadoop.hbase.util Bytes)))
 
-(defn row-filter-with-regex
-  [regex]
-  (RowFilter. CompareFilter$CompareOp/EQUAL (RegexStringComparator. regex)))
-
-
 (defn column-filter
   [column-family qualifier]
   (let [qualifier-filter (QualifierFilter. CompareFilter$CompareOp/EQUAL
@@ -29,12 +24,12 @@
     (FilterList. [qualifier-filter family-filter])))
 
 
-(defn qualifier-filter
+(defn column-qualifier-filter
   [qualifier]
   (QualifierFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes qualifier))))
 
 
-(defn family-filter
+(defn column-family-filter
   [family]
   (FamilyFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes family))))
 
@@ -47,3 +42,12 @@
 (defn column-prefix-filter
   [prefix]
   (ColumnPrefixFilter. (Bytes/toBytes prefix)))
+
+;;; Row filters
+(defn row-filter-with-regex
+  [regex]
+  (RowFilter. CompareFilter$CompareOp/EQUAL (RegexStringComparator. regex)))
+
+(defn row-prefix-filter
+  [prefix]
+  (PrefixFilter. (Bytes/toBytes prefix)))
