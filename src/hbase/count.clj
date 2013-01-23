@@ -34,7 +34,7 @@
 
 (defn count-rows-with-column
   [table-name column-family qualifier]
-  (let [filters [(f/qualifier-filter qualifier) (f/family-filter column-family)]]
+  (let [filters [(f/column-qualifier-filter qualifier) (f/column-family-filter column-family)]]
     (count-rows-with-filters table-name filters)))
 
 
