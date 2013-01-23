@@ -60,13 +60,15 @@
 
 (defn- fetch-rows*
   [scanner limit batch row-as]
-  (if (<= limit batch)
+  (if (and limit (<= limit batch))
     (map row-as (.next scanner limit))
     (loop [rows []
            num-fetched 0]
       (let [result (.next scanner batch)]
         (if (and (seq result)
-                 (not (>= num-fetched limit)))
+                 (if limit
+                   (not (>= num-fetched limit))
+                   true))
           (recur (doall (concat rows (map row-as result)))
                  (+ num-fetched (count result)))
           (take limit rows))))))
@@ -98,7 +100,8 @@
                :start-row start-row
                :stop-row stop-row
                :caching caching
-               :row-as row-as))
+               :row-as row-as
+               :limit limit))
 
 ;;; Prefix
 (defn fetch-rows-with-prefix
@@ -130,7 +133,7 @@
                  :batch batch
                  :row-as row-as)))
 
-;;; 
+;;; Regex
 (defn fetch-rows-with-regex
   [table-name regex-str & {:keys [limit caching batch row-as filters]
                            :or {limit 10
@@ -172,8 +175,6 @@
 
   (let [f1 (f/row-prefix-filter "PRE-INDEPENDENCE")]
     (fetch-rows-with-filters "table-name" [f1]  :row-as utils/result->key))
-
-  
 
   (hb/with-table [table (hb/table "table")]
     (hb/get table (Bytes/toBytes "row-key"))))
