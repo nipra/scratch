@@ -2,7 +2,7 @@
   (:require (libs.clojure-hbase [core :as hb]
                                 [util :as hu]
                                 [admin :as ha]))
-  (:require (hbase [filters :as f]))
+  (:require (hbase [utils :as utils] [filters :as f]))
   (:import (org.apache.hadoop.hbase.filter ValueFilter
                                            CompareFilter
                                            CompareFilter$CompareOp
@@ -15,6 +15,23 @@
                                            FilterList
                                            RowFilter
                                            RegexStringComparator)))
+(defn- sanitize-opts
+  [opts]
+  (mapcat identity
+          (remove #(nil? (second %))
+                  (partition 2 opts))))
+
+(defn- scan*
+  [table & opts]
+  (let [opts* (sanitize-opts opts)]
+    (apply (partial hb/scan table) opts*)))
+
+(defn- sanitize-filters
+  [filters]
+  (when filters
+    (if (instance? FilterList filters)
+      filters
+      (FilterList. filters))))
 
 (defn count-rows-with-filters
   [table-name filters]
@@ -46,14 +63,21 @@
 
 
 (defn count-rows
-  [table-name start-row end-row & {:keys [caching batch] :or {caching 1000 batch 100}}]
+  [table-name start-row end-row & {:keys [caching batch filters] :or {caching 1000 batch 100}}]
   (hb/with-table [table (hb/table table-name)]
-    (hb/with-scanner [scanner (hb/scan table
+    (hb/with-scanner [scanner (scan* table
                                        :start-row start-row
                                        :stop-row end-row
-                                       :caching caching)]
+                                       :caching caching
+                                       :filter (sanitize-filters filters))]
       (loop [n 0]
         (let [results (.next scanner batch)]
           (if (seq results)
             (recur (+ n (count results)))
             n))))))
+
+(comment
+  (let [column-filter (f/column-filter "column-family" "column-qualifier")]
+    (count-rows "table-name" "start-row" "stop-row"
+                :row-as utils/result->key
+                :filters [column-filter])))
