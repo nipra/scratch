@@ -181,4 +181,33 @@
     (fetch-rows-with-filters "table-name" [f1]  :row-as utils/result->key))
 
   (hb/with-table [table (hb/table "table")]
-    (hb/get table (Bytes/toBytes "row-key"))))
+    (hb/get table (Bytes/toBytes "row-key")))
+
+  (let [column-filter (f/column-filter "column-family" "column-qualifier")]
+    (fetch-rows "table-name" "start-row" "stop-row"
+                :row-as utils/result->key
+                :filters [column-filter]))
+
+  (let [column-filter (f/column-filter "column-family" "column-qualifier")
+        row-keys (fetch-rows "table-name" "start-row" "stop-row"
+                             :row-as utils/result->key
+                             :filters [column-filter]
+                             :limit nil)
+        result (multi-get "table-name" row-keys :columns ["column-family" ["column-qualifier" "value"]])]
+    (def *result result))
+
+  ;; Couldn't verify. Failing after retries.
+  (let [column-family-filter (f/column-family-filter "column-family")
+        column-qualifier-filter (f/column-qualifier-filter "column-qualifier")
+        value-filter (f/value-filter "value")
+        result (fetch-rows "table-name" "start-row" "stop-row"
+                           :filters [column-family-filter column-qualifier-filter value-filter]
+                           :limit 1)]
+    (def *result2 result))
+
+  (let [column-value-filter (f/column-value-filter "column-family" "qualifier" "value")
+        result (fetch-rows "table-name" "start-row" "stop-row"
+                           :filters [column-value-filter]
+                           :limit 1
+                           :columns ["column-family" ["qualifier"]])]
+    (def *result3 result)))
