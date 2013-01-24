@@ -101,4 +101,4 @@
   (SingleColumnValueFilter. (Bytes/toBytes column-family)
                             (Bytes/toBytes qualifier)
                             compare-op
-                            comparator-fn))
+                            (comparator-fn value)))
