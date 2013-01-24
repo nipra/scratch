@@ -71,7 +71,9 @@
                    true))
           (recur (doall (concat rows (map row-as result)))
                  (+ num-fetched (count result)))
-          (take limit rows))))))
+          (if limit
+            (take limit rows)
+            rows))))))
 
 ;;; Generic
 (defn fetch-rows+
@@ -91,7 +93,7 @@
 
 ;;; Simplest one
 (defn fetch-rows
-  [table-name start-row stop-row & {:keys [limit caching batch row-as]
+  [table-name start-row stop-row & {:keys [limit caching batch row-as filters columns]
                                     :or {limit 10
                                          caching 1000
                                          batch 100
@@ -101,7 +103,9 @@
                :stop-row stop-row
                :caching caching
                :row-as row-as
-               :limit limit))
+               :limit limit
+               :filters filters
+               :columns columns))
 
 ;;; Prefix
 (defn fetch-rows-with-prefix
