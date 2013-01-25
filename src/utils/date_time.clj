@@ -15,7 +15,7 @@
                                          (.appendSuffix " day" "days")))]
     (with-out-str (println (.print period-formatter period)))))
 
-(defn yyyymmdd-range
+(defn yyyymmdd-range*
   [start stop]
   (let [formatter (ctf/formatter "yyyyMMdd")
         start-date (ctf/parse formatter start)
@@ -28,3 +28,14 @@
                next-date
                (ctc/plus next-date (ctc/days 1)))
         (conj dates stop)))))
+
+(defn yyyymmdd-range
+  [start stop]
+  (let [formatter (ctf/formatter "yyyyMMdd")
+        start-date (ctf/parse formatter start)
+        stop-date (ctf/parse formatter stop)
+        date-range (iterate #(ctc/plus % (ctc/days 1)) start-date)
+        within? (partial ctc/within? (ctc/interval start-date stop-date))
+        dates (take-while within? date-range)
+        format-date (partial ctf/unparse formatter)]
+    (conj (vec (map format-date dates)) stop)))
