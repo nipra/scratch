@@ -25,7 +25,15 @@
 (def lte CompareFilter$CompareOp/LESS_OR_EQUAL)
 (def ne CompareFilter$CompareOp/NOT_EQUAL)
 
-(declare make-bit-comparator)
+(defn bit-comparator
+  [value bitwise-op]
+  (BitComparator. (Bytes/toBytes value) bitwise-op))
+
+(defn make-bit-comparator
+  [bitwise-op]
+  (fn [value]
+    (bit-comparator value bitwise-op)))
+
 (def binary-and (make-bit-comparator BitComparator$BitwiseOp/AND))
 (def binary-or (make-bit-comparator BitComparator$BitwiseOp/OR))
 (def binary-xor (make-bit-comparator BitComparator$BitwiseOp/XOR))
@@ -38,32 +46,20 @@
   [value]
   (BinaryPrefixComparator. (Bytes/toBytes value)))
 
-(defn bit-comparator
-  [value bitwise-op]
-  (BitComparator. (Bytes/toBytes value) bitwise-op))
-
-(defn make-bit-comparator
-  [bitwise-op]
-  (fn [value]
-    (bit-comparator value bitwise-op)))
-
-(defn column-filter
-  [column-family qualifier]
-  (let [qualifier-filter (QualifierFilter. CompareFilter$CompareOp/EQUAL
-                                           (BinaryComparator. (Bytes/toBytes qualifier)))
-        family-filter (FamilyFilter. CompareFilter$CompareOp/EQUAL
-                                     (BinaryComparator. (Bytes/toBytes column-family)))]
-    (FilterList. [qualifier-filter family-filter])))
-
-
 (defn column-qualifier-filter
   [qualifier]
-  (QualifierFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes qualifier))))
+  (QualifierFilter. eq (binary-comparator qualifier)))
 
 
 (defn column-family-filter
   [family]
-  (FamilyFilter. CompareFilter$CompareOp/EQUAL (BinaryComparator. (Bytes/toBytes family))))
+  (FamilyFilter. eq (binary-comparator family)))
+
+(defn column-filter
+  [column-family qualifier]
+  (let [qualifier-filter (column-qualifier-filter qualifier)
+        family-filter (column-family-filter column-family)]
+    (FilterList. [qualifier-filter family-filter])))
 
 ;;; Column filters
 (defn column-range-filter
@@ -78,7 +74,7 @@
 ;;; Row filters
 (defn row-filter-with-regex
   [regex]
-  (RowFilter. CompareFilter$CompareOp/EQUAL (RegexStringComparator. regex)))
+  (RowFilter. eq (RegexStringComparator. regex)))
 
 (defn row-prefix-filter
   [prefix]
