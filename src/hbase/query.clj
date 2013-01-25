@@ -2,49 +2,31 @@
   (:require (libs.clojure-hbase [core :as hb]
                                 [util :as hu]
                                 [admin :as ha]))
-  (:require (hbase [utils :as utils] [filters :as f]))
+  (:require (hbase [utils :as u] [filters :as f]))
   (:import (org.apache.hadoop.hbase.filter FilterList))
   (:import (org.apache.hadoop.hbase.util Bytes))
   (:require (clojure [pprint :as p])))
 
-(defn- sanitize-opts
-  [opts]
-  (mapcat identity
-          (remove #(nil? (second %))
-                  (partition 2 opts))))
-
-(defn- sanitize-filters
-  [filters]
-  (when filters
-    (if (instance? FilterList filters)
-      filters
-      (FilterList. filters))))
-
 (defn- get*
   [table row-key & opts]
-  (let [opts* (sanitize-opts opts)]
+  (let [opts* (u/sanitize-opts opts)]
     (apply (partial hb/get table row-key) opts*)))
 
-(defn- scan*
-  [table & opts]
-  (let [opts* (sanitize-opts opts)]
-    (apply (partial hb/scan table) opts*)))
-
 ;;; Single Row
-(defn fetch-row
-  [table-name row-key & {:keys [row-as columns filters]
-                         :or {row-as utils/as-vector}}]
+(defn fetch-row*
+  [table-name row-key & {:keys [row-as columns filters key-only?]
+                         :or {row-as (if key-only? u/result->key u/as-vector)}}]
   (hb/with-table [table (hb/table table-name)]
     (row-as (get* table (Bytes/toBytes row-key)
                   :columns columns
-                  :filter (sanitize-filters filters)))))
+                  :filter (f/sanitize-filters filters key-only?)))))
 
 ;;; Batch row keys
 (defn multi-get
-  [table-name row-keys & {:keys [row-as columns filters]
-                          :or {row-as utils/as-vector}}]
-  (let [opts [:columns columns :filter filters]
-        opts* (sanitize-opts opts)
+  [table-name row-keys & {:keys [row-as columns filters key-only?]
+                          :or {row-as (if key-only? u/result->key u/as-vector)}}]
+  (let [opts [:columns columns :filter (f/sanitize-filters filters key-only?)]
+        opts* (u/sanitize-opts opts)
         gets (map #(apply hb/get* % opts*)
                   (map #(Bytes/toBytes %) row-keys))]
     (hb/with-table [table (hb/table table-name)]
@@ -52,7 +34,7 @@
 
 (defn fetch-row-with-column-range
   [table-name row-key min-column max-column & {:keys [row-as]
-                                               :or {row-as utils/as-vector}}]
+                                               :or {row-as u/as-vector}}]
   (let [column-range-filter (f/column-range-filter min-column max-column)]
     (hb/with-table [table (hb/table table-name)]
       (row-as (get* table (Bytes/toBytes row-key)
@@ -77,27 +59,27 @@
 
 ;;; Generic
 (defn fetch-rows+
-  [table-name & {:keys [start-row stop-row filters columns limit caching batch row-as]
+  [table-name & {:keys [start-row stop-row filters columns limit caching batch row-as key-only?]
                  :or {limit 10
                       caching 1000
                       batch 100
-                      row-as utils/as-vector}}]
+                      row-as (if key-only? u/result->key u/as-vector)}}]
   (hb/with-table [table (hb/table table-name)]
-    (hb/with-scanner [scanner (scan* table
-                                     :start-row start-row
-                                     :stop-row stop-row
-                                     :caching caching
-                                     :filter (sanitize-filters filters)
-                                     :columns columns)]
+    (hb/with-scanner [scanner (u/scan* table
+                                       :start-row start-row
+                                       :stop-row stop-row
+                                       :caching caching
+                                       :filter (f/sanitize-filters filters key-only?)
+                                       :columns columns)]
       (fetch-rows* scanner limit batch row-as))))
 
 ;;; Simplest one
 (defn fetch-rows
-  [table-name start-row stop-row & {:keys [limit caching batch row-as filters columns]
+  [table-name start-row stop-row & {:keys [limit caching batch row-as filters columns key-only?]
                                     :or {limit 10
                                          caching 1000
                                          batch 100
-                                         row-as utils/as-vector}}]
+                                         row-as (if key-only? u/result->key u/as-vector)}}]
   (fetch-rows+ table-name
                :start-row start-row
                :stop-row stop-row
@@ -105,52 +87,56 @@
                :row-as row-as
                :limit limit
                :filters filters
-               :columns columns))
+               :columns columns
+               :key-only? key-only?))
 
 ;;; Prefix
 (defn fetch-rows-with-prefix
-  [table-name prefix & {:keys [limit caching batch row-as]
+  [table-name prefix & {:keys [limit caching batch row-as key-only?]
                         :or {limit 10
                              caching 1000
                              batch 100
-                             row-as utils/as-vector}}]
+                             row-as (if key-only? u/result->key u/as-vector)}}]
   (let [prefix-filter (f/row-prefix-filter prefix)]
     (fetch-rows+ table-name
                  :filters [prefix-filter]
                  :limit limit
                  :caching caching
                  :batch batch
-                 :row-as row-as)))
+                 :row-as row-as
+                 :key-only? key-only?)))
 
 ;;; Suffix
 (defn fetch-rows-with-suffix
-  [table-name suffix & {:keys [limit caching batch row-as]
+  [table-name suffix & {:keys [limit caching batch row-as key-only?]
                         :or {limit 10
                              caching 1000
                              batch 100
-                             row-as utils/as-vector}}]
+                             row-as (if key-only? u/result->key u/as-vector)}}]
   (let [row-filter (f/row-filter-with-regex (format "^.*%s$" suffix))]
     (fetch-rows+ table-name
                  :filters [row-filter]
                  :limit limit
                  :caching caching
                  :batch batch
-                 :row-as row-as)))
+                 :row-as row-as
+                 :key-only? key-only?)))
 
 ;;; Regex
 (defn fetch-rows-with-regex
-  [table-name regex-str & {:keys [limit caching batch row-as filters]
+  [table-name regex-str & {:keys [limit caching batch row-as filters key-only?]
                            :or {limit 10
                                 caching 1000
                                 batch 100
-                                row-as utils/as-vector}}]
+                                row-as (if key-only? u/result->key u/as-vector)}}]
   (let [row-filter (f/row-filter-with-regex regex-str)]
     (fetch-rows+ table-name
                  :filters (concat filters [row-filter])
                  :limit limit
                  :caching caching
                  :batch batch
-                 :row-as row-as)))
+                 :row-as row-as
+                 :key-only? key-only?)))
 
 
 
@@ -168,29 +154,29 @@
   
   (fetch-row-with-column-range "table-name" "row-key" "min" "max")
 
-  (fetch-rows "table-name" "start-row" "end-row" :row-as utils/result->key)
-  (fetch-rows "table-name" "start-row" "end-row" :row-as utils/as-map)
+  (fetch-rows "table-name" "start-row" "end-row" :row-as u/result->key)
+  (fetch-rows "table-name" "start-row" "end-row" :row-as u/as-map)
   
   (fetch-rows-with-suffix "table-name" "suffix")
-  (fetch-rows-with-suffix "table-name" "suffix" :row-as utils/result->key)
+  (fetch-rows-with-suffix "table-name" "suffix" :row-as u/result->key)
 
   (let [f1 (f/row-filter-with-regex "ReGenX")]
-    (fetch-rows-with-filters "table-name" [f1] :row-as utils/result->key))
+    (fetch-rows-with-filters "table-name" [f1] :row-as u/result->key))
 
   (let [f1 (f/row-prefix-filter "PRE-INDEPENDENCE")]
-    (fetch-rows-with-filters "table-name" [f1]  :row-as utils/result->key))
+    (fetch-rows-with-filters "table-name" [f1]  :row-as u/result->key))
 
   (hb/with-table [table (hb/table "table")]
     (hb/get table (Bytes/toBytes "row-key")))
 
   (let [column-filter (f/column-filter "column-family" "column-qualifier")]
     (fetch-rows "table-name" "start-row" "stop-row"
-                :row-as utils/result->key
+                :row-as u/result->key
                 :filters [column-filter]))
 
   (let [column-filter (f/column-filter "column-family" "column-qualifier")
         row-keys (fetch-rows "table-name" "start-row" "stop-row"
-                             :row-as utils/result->key
+                             :row-as u/result->key
                              :filters [column-filter]
                              :limit nil)
         result (multi-get "table-name" row-keys :columns ["column-family" ["column-qualifier" "value"]])]

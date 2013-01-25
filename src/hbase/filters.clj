@@ -10,7 +10,9 @@
                                            RowFilter
                                            RegexStringComparator
                                            ColumnRangeFilter
-                                           ColumnPrefixFilter)
+                                           ColumnPrefixFilter
+                                           KeyOnlyFilter
+                                           FirstKeyOnlyFilter)
            (org.apache.hadoop.hbase.filter WritableByteArrayComparable
                                            BinaryComparator
                                            BinaryPrefixComparator
@@ -98,3 +100,24 @@
                             (Bytes/toBytes qualifier)
                             compare-op
                             (comparator-fn value)))
+
+;;;
+(defn key-only-filter
+  []
+  (KeyOnlyFilter.))
+
+(defn first-key-only-filter
+  []
+  (FirstKeyOnlyFilter.))
+
+;;;
+(defn sanitize-filters
+  [filters & [key-only?]]
+  (when filters
+    (let [filters* (if key-only?
+                     (concat filters [(key-only-filter)
+                                      (first-key-only-filter)])
+                     filters)]
+      (if (instance? FilterList filters*)
+        filters
+        (FilterList. filters*)))))

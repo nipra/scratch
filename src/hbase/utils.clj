@@ -86,3 +86,14 @@
                     :map-value hu/as-str
                     :map-family hu/as-str
                     :map-qualifier hu/as-str))
+
+(defn sanitize-opts
+  [opts]
+  (mapcat identity
+          (remove #(nil? (second %))
+                  (partition 2 opts))))
+
+(defn scan*
+  [table & opts]
+  (let [opts* (sanitize-opts opts)]
+    (apply (partial hb/scan table) opts*)))
