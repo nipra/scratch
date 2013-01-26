@@ -8,16 +8,19 @@
                                            FamilyFilter
                                            FilterList
                                            RowFilter
-                                           RegexStringComparator
+                                           RandomRowFilter
                                            ColumnRangeFilter
                                            ColumnPrefixFilter
+                                           ColumnCountGetFilter
+                                           ColumnPaginationFilter
                                            KeyOnlyFilter
                                            FirstKeyOnlyFilter)
            (org.apache.hadoop.hbase.filter WritableByteArrayComparable
                                            BinaryComparator
                                            BinaryPrefixComparator
                                            BitComparator
-                                           BitComparator$BitwiseOp)
+                                           BitComparator$BitwiseOp
+                                           RegexStringComparator)
            (org.apache.hadoop.hbase.util Bytes)))
 
 (def eq CompareFilter$CompareOp/EQUAL)
@@ -73,6 +76,14 @@
   [prefix]
   (ColumnPrefixFilter. (Bytes/toBytes prefix)))
 
+(defn column-count-get-filter
+  [n]
+  (ColumnCountGetFilter. n))
+
+(defn column-pagination-filter
+  [limit offset]
+  (ColumnPaginationFilter. limit offset))
+
 ;;; Row filters
 (defn row-filter-with-regex
   [regex]
@@ -81,6 +92,10 @@
 (defn row-prefix-filter
   [prefix]
   (PrefixFilter. (Bytes/toBytes prefix)))
+
+(defn random-row-filter
+  [& [n]]
+  (RandomRowFilter. (or n (rand))))
 
 ;;; Value filters
 (defn value-filter
@@ -119,5 +134,5 @@
                                       (first-key-only-filter)])
                      filters)]
       (if (instance? FilterList filters*)
-        filters
+        filters*
         (FilterList. filters*)))))
