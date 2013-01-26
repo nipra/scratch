@@ -138,6 +138,23 @@
                  :row-as row-as
                  :key-only? key-only?)))
 
+;;; Random
+(defn random-rows
+  [table-name start-row stop-row & {:keys [limit caching batch row-as filters columns key-only? n]
+                                    :or {limit 10
+                                         caching 1000
+                                         batch 100
+                                         row-as (if key-only? u/result->key u/as-vector)
+                                         n (rand)}}]
+  (fetch-rows+ table-name
+               :start-row start-row
+               :stop-row stop-row
+               :caching caching
+               :row-as row-as
+               :limit limit
+               :filters (conj filters (f/random-row-filter n))
+               :columns columns
+               :key-only? key-only?))
 
 
 (comment
