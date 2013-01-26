@@ -8,5 +8,6 @@
 /.lein-deps-sum
 *~
 resources/auth.config
+resources/hbase-site.xml
 auth_config.clj
 /maven_repo
