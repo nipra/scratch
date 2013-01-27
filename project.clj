@@ -201,15 +201,6 @@
                  [org.slf4j/slf4j-api "1.6.4"]
                  [org.slf4j/slf4j-log4j12 "1.6.4"]
                  
-                 ;; https://github.com/Raynes/fs
-                 ;; File system utilities for Clojure.
-                 [fs "1.1.2"]
-
-                 ;; https://github.com/jashmenn/clj-file-utils
-                 ;; Unix-like filesystem manipulation utilities for Clojure,
-                 ;; wrapping Apache Commons IO.
-                 [clj-file-utils "0.2.1"]
-
                  ;; A graph database with pluggable backends, written in Clojure.
                  ;; https://github.com/flatland/jiraph
                  [jiraph "0.8.0-beta6"]
@@ -242,6 +233,19 @@
                  ;; useful functions and extensible macros
                  ;; https://github.com/cgrand/utils
                  [net.cgrand/utils "0.1.0-SNAPSHOT"]
+
+                 ;; Plumbing and Graph: the Clojure utility belt
+                 ;; https://github.com/Prismatic/plumbing [Not on clojars]
+                 
+                 ;; File system utilities for Clojure.
+                 ;; https://github.com/Raynes/fs
+                 [fs "1.1.2"]
+
+                 ;; Unix-like filesystem manipulation utilities for Clojure,
+                 ;; wrapping Apache Commons IO.
+                 ;; https://github.com/jashmenn/clj-file-utils
+                 [clj-file-utils "0.2.1"]
+
                  
                  ;; Others [Not on Clojars, Old, ...]
                  ;; * https://github.com/nathanmarz/storm/blob/master/src/clj/backtype/storm/util.clj [Not a lib]
