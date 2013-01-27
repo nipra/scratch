@@ -31,6 +31,19 @@
 ;; https://github.com/cgrand/utils
 [net.cgrand/utils "0.1.0-SNAPSHOT"]
 
+;; Plumbing and Graph: the Clojure utility belt
+;; https://github.com/Prismatic/plumbing [Not on clojars]
+
+;; File system utilities for Clojure.
+;; https://github.com/Raynes/fs
+[fs "1.1.2"]
+
+;; Unix-like filesystem manipulation utilities for Clojure,
+;; wrapping Apache Commons IO.
+;; https://github.com/jashmenn/clj-file-utils
+[clj-file-utils "0.2.1"]
+
+
 ;; Others [Not on Clojars, Old, ...]
 ;; * https://github.com/nathanmarz/storm/blob/master/src/clj/backtype/storm/util.clj [Not a lib]
 ;; * https://github.com/amitrathore/clj-utils [Old]
