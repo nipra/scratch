@@ -388,6 +388,16 @@
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 ;; Fun
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                 
+                 ;; Collaborative Programmable Music
+                 ;; https://github.com/overtone/overtone
+                 [overtone "0.8.0"]
+
+                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
                  ;; https://github.com/llasram/inet.data
                  ;; Inet.data is a library for modeling various Internet-related
                  ;; conceptual entities as data, supporting applications which
