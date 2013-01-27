@@ -253,6 +253,7 @@
                  ;; * https://github.com/arohner/clojure-contrib/tree/1.3-compat
                  ;; * https://github.com/grammati/yoodls [Not on clojars]
                  ;; * https://github.com/jbester/cljext [Old]
+                 ;; * https://github.com/overtone/overtone/tree/master/src/overtone/helpers
 
                  ;; Java
                  
