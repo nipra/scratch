@@ -225,4 +225,6 @@
               :filters [(f/row-filter-with-regex ".+keyword$")])
   (count-rows "table-name" "start-row" "stop-row"
               :limit nil
-              :filters [(f/column-range-filter "column1" "column2")]))
+              :filters [(f/column-range-filter "column1" "column2")])
+  (multi-get "table-name" ["row1" "row2"]
+             :columns ["column-family" (dt/yyyymmdd-range "start-date" "stop-date") ]))
