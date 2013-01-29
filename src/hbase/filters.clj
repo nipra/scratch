@@ -20,7 +20,8 @@
                                            BinaryPrefixComparator
                                            BitComparator
                                            BitComparator$BitwiseOp
-                                           RegexStringComparator)
+                                           RegexStringComparator
+                                           SubstringComparator)
            (org.apache.hadoop.hbase.util Bytes)))
 
 (def eq CompareFilter$CompareOp/EQUAL)
@@ -30,6 +31,7 @@
 (def lte CompareFilter$CompareOp/LESS_OR_EQUAL)
 (def ne CompareFilter$CompareOp/NOT_EQUAL)
 
+;;; Comparators
 (defn bit-comparator
   [value bitwise-op]
   (BitComparator. (Bytes/toBytes value) bitwise-op))
@@ -51,6 +53,15 @@
   [value]
   (BinaryPrefixComparator. (Bytes/toBytes value)))
 
+(defn regex-string-comparator
+  [regex]
+  (RegexStringComparator. regex))
+
+(defn substring-comparator
+  [substr]
+  (SubstringComparator. substr))
+
+;;; Filters
 (defn column-qualifier-filter
   [qualifier]
   (QualifierFilter. eq (binary-comparator qualifier)))
@@ -87,11 +98,15 @@
 ;;; Row filters
 (defn row-filter-with-regex
   [regex]
-  (RowFilter. eq (RegexStringComparator. regex)))
+  (RowFilter. eq (regex-string-comparator regex)))
 
 (defn row-prefix-filter
   [prefix]
   (PrefixFilter. (Bytes/toBytes prefix)))
+
+(defn row-suffix-filter
+  [suffix]
+  (row-filter-with-regex (format "^.*%s$" suffix)))
 
 (defn random-row-filter
   [& [n]]
