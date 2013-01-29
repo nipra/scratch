@@ -48,15 +48,16 @@
 
 
 (defn count-rows
-  [table-name start-row end-row & {:keys [caching batch filters]
+  [table-name start-row end-row & {:keys [caching batch filters key-only?]
                                    :or {caching 1000
-                                        batch 100}}]
+                                        batch 100
+                                        key-only? true}}]
   (hb/with-table [table (hb/table table-name)]
     (hb/with-scanner [scanner (u/scan* table
                                        :start-row start-row
                                        :stop-row end-row
                                        :caching caching
-                                       :filter (f/sanitize-filters filters true))]
+                                       :filter (f/sanitize-filters filters key-only?))]
       (loop [n 0]
         (let [results (.next scanner batch)]
           (if (seq results)
