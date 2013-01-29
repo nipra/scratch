@@ -213,4 +213,16 @@
                            :filters [column-value-filter]
                            :limit 1
                            :columns ["column-family" ["qualifier"]])]
-    (def *result3 result)))
+    (def *result3 result))
+
+  (count-rows "table-name" "start-row" "stop-row"
+              :filters [(f/row-filter-with-regex ".+(word1|word2|word3)$")])
+  (fetch-rows "table-name" "start-row" "stop-row"
+              :limit nil
+              :key-only? true
+              :filters [(f/row-filter-with-regex ".+(word1|word2|word3)$")])
+  (count-rows "table-name" nil nil ; Don't specify start-row and stop row
+              :filters [(f/row-filter-with-regex ".+keyword$")])
+  (count-rows "table-name" "start-row" "stop-row"
+              :limit nil
+              :filters [(f/column-range-filter "column1" "column2")]))
