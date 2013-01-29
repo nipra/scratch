@@ -1,11 +1,12 @@
 (ns scratch.core
   (:require [clj-http.client :as http])
-  (:require [clojure.java.io :as io])
+  (:require (clojure.java [io :as io]
+                          [javadoc :as j]
+                          [classpath :as cp]))
   (:require [clojure.string :as str])
   (:require [clojurewerkz.serialism.core :as s])
-  (:require [clojure.java.classpath :as cp])
-  (:require [clojure.math.combinatorics :as math])
-  (:require [clojure.math.numeric-tower :as num])
+  (:require (clojure.math [combinatorics :as math]
+                          [numeric-tower :as num]))
   (:require (clojure.tools.namespace [dependency :as ns-dep]
                                      [dir :as ns-dir]
                                      [file :as ns-file]
@@ -23,7 +24,9 @@
   (:require (inet.data [ip :as ip]
                        [dns :as dns]))
   (:require [inet.data.format.psl :as psl])
-  (:require (criterium [core :as crit])))
+  (:require (criterium [core :as crit]))
+  (:import (java.net URLEncoder
+                     URLDecoder)))
 
 (comment
   (def *img
@@ -105,3 +108,9 @@
 (comment
   (crit/with-progress-reporting (crit/bench (reduce + (range 100)) :verbose)))
 
+(comment
+  (j/javadoc String)
+  (j/javadoc java.util.Date))
+
+(comment
+  (URLDecoder/decode (URLEncoder/encode "http://docs.oracle.com/javase/6/docs/api/index.html?java/net/URLDecoder.html")))
