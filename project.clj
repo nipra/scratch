@@ -10,6 +10,7 @@
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
                  [org.xerial/sqlite-jdbc "3.6.16"]
+                 [c3p0/c3p0 "0.9.1.2"]
                  [korma "0.3.0-beta9"]
 
                  ;; https://github.com/kumarshantanu/clj-dbcp
