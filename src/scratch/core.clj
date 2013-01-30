@@ -26,7 +26,8 @@
   (:require [inet.data.format.psl :as psl])
   (:require (criterium [core :as crit]))
   (:import (java.net URLEncoder
-                     URLDecoder)))
+                     URLDecoder))
+  (:require (utils [db :as db])))
 
 (comment
   (def *img
@@ -114,3 +115,16 @@
 
 (comment
   (URLDecoder/decode (URLEncoder/encode "http://docs.oracle.com/javase/6/docs/api/index.html?java/net/URLDecoder.html")))
+
+(comment
+  (def db-spec {:classname "com.mysql.jdbc.Driver"
+                :subprotocol "mysql"
+                :subname "//<host>:3306/<db_name>"
+                :user "USER"
+                :password "PASSWORD"})
+  (def pooled-db (delay (db/conn-pool db-spec)))
+  (defn db-connection [] @pooled-db)
+  (jdbc/with-connection (db-connection)
+    (jdbc/with-query-results rows
+        ["SELECT count(id) FROM foo WHERE bar = 'baz'"]
+      (doall rows))))
