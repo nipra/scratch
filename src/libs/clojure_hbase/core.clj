@@ -407,7 +407,7 @@
 ;; partition the command sequence.
 (def ^{:private true} put-argnums
   {:value        1    ;; :value [:family :column <value>]
-   :values       1    ;; :values [:family [:column1 value1 ...] ...]
+   :values       1    ;; :values [:family [:column1 value1 ts(optional) ...] ...]
    :write-to-WAL 1    ;; :write-to-WAL true/false
    :row-lock     1    ;; :row-lock <a row lock you've got>
    :use-existing 1})  ;; :use-existing <a Put you've made>
@@ -427,15 +427,24 @@
       (new Put row))))
 
 (defn- put-add
-  [^Put put-op family qualifier value]
-  (.add put-op (to-bytes family) (to-bytes qualifier) (to-bytes value)))
+  ([^Put put-op family qualifier value]
+     (.add put-op (to-bytes family) (to-bytes qualifier) (to-bytes value)))
+  ([^Put put-op family qualifier value ts]
+     (.add put-op (to-bytes family) (to-bytes qualifier) ts (to-bytes value))))
 
-(defn- handle-put-values
+(defn- handle-put-values-old
   [^Put put-op values]
   (doseq [value (partition 2 values)]
     (let [[family qv-pairs] value]
       (doseq [[q v] (partition 2 qv-pairs)]
         (put-add put-op family q v))))
+  put-op)
+
+(defn- handle-put-values
+  [^Put put-op values]
+  (doseq [value (partition 2 values)]
+    (let [[family params] value]
+      (apply put-add put-op family params)))
   put-op)
 
 (defn put*
@@ -456,7 +465,7 @@
 (defn put
   "Creates and executes a Put object against the given table. Options are
    the same as for put."
-  [^HTable table row & args]
+  [table row & args]
   (let [p ^Put (apply put* row args)]
     (io!
      (.put table p))))
@@ -580,7 +589,7 @@
 (defn delete
   "Creates and executes a Delete object against the given table. Options are
    the same as for delete."
-  [^HTable table row & args]
+  [table row & args]
   (let [d ^Delete (apply delete* row args)]
     (io!
      (.delete table d))))
