@@ -27,7 +27,13 @@
   (:require (criterium [core :as crit]))
   (:import (java.net URLEncoder
                      URLDecoder))
-  (:require (utils [db :as db])))
+  (:require (clj-time [core :as ctc]
+                      [format :as ctf]
+                      [coerce :as ctco]
+                      [local :as ctl]))
+  (:require (utils [date-time :as dt]))
+  ;; (:require (utils [db :as db]))
+  )
 
 (comment
   (def *img
@@ -128,3 +134,10 @@
     (jdbc/with-query-results rows
         ["SELECT count(id) FROM foo WHERE bar = 'baz'"]
       (doall rows))))
+
+
+(comment
+  (ctco/to-long (ctc/now))
+  (dt/yyyymmdd->millis "20120101")
+  (ctco/to-long (ctl/to-local-date-time (ctf/parse utils.date-time/yyyyMMdd "20120101")))
+  (ctf/parse (:basic-date-time-no-ms ctf/formatters) "20120101T000000Z"))
