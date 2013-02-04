@@ -14,7 +14,8 @@
                                            ColumnCountGetFilter
                                            ColumnPaginationFilter
                                            KeyOnlyFilter
-                                           FirstKeyOnlyFilter)
+                                           FirstKeyOnlyFilter
+                                           InclusiveStopFilter)
            (org.apache.hadoop.hbase.filter WritableByteArrayComparable
                                            BinaryComparator
                                            BinaryPrefixComparator
@@ -139,6 +140,11 @@
 (defn first-key-only-filter
   []
   (FirstKeyOnlyFilter.))
+
+;;;
+(defn inclusive-stop-filter
+  [stop-row-key]
+  (InclusiveStopFilter. (Bytes/toBytes stop-row-key)))
 
 ;;;
 (defn sanitize-filters
