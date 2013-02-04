@@ -72,6 +72,15 @@
                      :map-qualifier hu/as-str
                      :map-timestamp ctco/from-long)))
 
+(defn as-vector-local
+  [result]
+  (map #(cons (result->key result) %)
+       (hb/as-vector result
+                     :map-value hu/as-str
+                     :map-family hu/as-str
+                     :map-qualifier hu/as-str
+                     :map-timestamp (comp ctl/to-local-date-time ctco/from-long))))
+
 (defn as-map
   [result]
   (hb/as-map result
