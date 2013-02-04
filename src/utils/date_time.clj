@@ -1,10 +1,13 @@
 (ns utils.date-time
-  (:import (org.joda.time Period Seconds))
+  (:import (org.joda.time Period Seconds DateTime))
   (:import (org.joda.time.format PeriodFormatterBuilder PeriodFormatter))
   (:require (clj-time [core :as ctc]
                       [format :as ctf]
                       [coerce :as ctco]
                       [local :as ctl])))
+
+;;; http://joda-time.sourceforge.net/api-release/index.html?org/joda/time/format/ISODateTimeFormat.html
+(def yyyyMMdd (ctf/formatter "yyyyMMdd"))
 
 ;;; FIXME: Incomplete
 (defn readable-secs
@@ -39,3 +42,8 @@
         dates (take-while within? date-range)
         format-date (partial ctf/unparse formatter)]
     (conj (vec (map format-date dates)) stop)))
+
+(defn yyyymmdd->millis
+  "`date' in yyyyMMdd format."
+  [date]
+  (ctco/to-long (ctf/parse yyyyMMdd date)))
