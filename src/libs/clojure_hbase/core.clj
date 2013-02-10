@@ -25,10 +25,15 @@
 ;; HBaseConfiguration being used by an HTablePool. Unfortunately, this means
 ;; you need to remember and keep track of this yourself, if you want to be
 ;; switching them around.
+(defn default-config*
+  "Returns the default HBaseConfiguration object."
+  []
+  (HBaseConfiguration/create))
+
 (defn default-config
   "Returns the default HBaseConfiguration as a map."
   []
-  (into {} (HBaseConfiguration/create)))
+  (into {} (default-config*)))
 
 (defn set-config
   "Resets the *db* atom, so that subsequent calls to htable-pool
