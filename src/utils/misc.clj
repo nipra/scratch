@@ -7,3 +7,8 @@
     {:host-name (.getHostName local-host)
      :host-address (.getHostAddress local-host)
      :canonical-host-name (.getCanonicalHostName local-host)}))
+
+(defn sleep
+  [time]
+  "``time'' in ms"
+  (Thread/sleep time))
