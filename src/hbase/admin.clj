@@ -13,8 +13,11 @@
                                            HBaseAdmin
                                            RowLock
                                            Get Put Delete Scan Result)
-           [org.apache.hadoop.hbase.util Bytes]))
+           [org.apache.hadoop.hbase.util Bytes])
+  (:require (clojure [pprint :as p])))
 
+;;; Using HTable
+;;; Use hb/default-config or hb/default-config*
 (defn get-configuration
   [table-name]
   (let [conf (.getConfiguration (hb/table table-name))
