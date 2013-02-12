@@ -64,6 +64,24 @@
             (recur (+ n (count results)))
             n))))))
 
+(defn table-has-min-n-keys?
+  [table-name n]
+  (hb/with-table [table (hb/table table-name)]
+    (hb/with-scanner [scanner (u/scan* table
+                                       :caching 1000
+                                       :filter (f/sanitize-filters nil true))]
+      (loop [m 0]
+        (let [num-keys (count (.next scanner 1000))]
+          (if (>= (+ m num-keys) n)
+            true
+            (if (zero? num-keys)
+              false
+              (recur (+ m num-keys)))))))))
+
+(defn find-tables-with-lte
+  [n & [tables]]
+  (doall (remove #(table-has-min-n-keys? % (inc n)) tables)))
+
 (comment
   (let [column-filter (f/column-filter "column-family" "column-qualifier")]
     (count-rows "table-name" "start-row" "stop-row"
