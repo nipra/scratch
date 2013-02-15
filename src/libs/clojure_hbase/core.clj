@@ -18,7 +18,7 @@
 
 ;; This holds the HTablePool reference for all users. Users never have to see
 ;; this, so we just hide this detail from the user.
-(def ^{:dynamic true :private true} *db*
+(def ^{:dynamic true} *db*
   (atom nil))
 
 ;; There doesn't appear to be, as far as I can tell, a way to get the current
@@ -49,11 +49,23 @@
     (swap! *db* (fn [_]
                   (HTablePool. config-obj Integer/MAX_VALUE)))))
   
-(defn- ^HTablePool htable-pool
+(defn ^HTablePool htable-pool
   []
   (if-let [pool @*db*]
     pool
     (swap! *db* (fn [curr-db] (or curr-db (HTablePool.))))))
+
+(defn get-config-object
+  [config-map]
+  (let [config-obj (HBaseConfiguration/create)]
+    (doseq [[k v] (seq config-map)]
+      (.set config-obj (name k) (name v)))
+    config-obj))
+
+(defn htable-pool*
+  [config-map]
+  (HTablePool. (get-config-object config-map) Integer/MAX_VALUE))
+
 
 (defmulti to-bytes-impl
   "Converts its argument into an array of bytes. By default, uses HBase's
@@ -244,13 +256,13 @@
   "Gets an HTable from the open HTablePool by name."
   [table-name]
   (io!
-   (.getTable (htable-pool) (to-bytes table-name))))
+    (.getTable @*db* (to-bytes table-name))))
 
 (defn release-table
   "Puts an HTable back into the open HTablePool."
   [table]
   (io!
-   (.putTable (htable-pool) table)))
+    (.putTable @*db* table)))
 
 ;; with-table and with-scanner are basically the same function, but I couldn't
 ;; figure out a way to generate them both with the same macro.
