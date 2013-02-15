@@ -460,8 +460,9 @@
 (defn- handle-put-values
   [^Put put-op values]
   (doseq [value (partition 2 values)]
-    (let [[family params] value]
-      (apply put-add put-op family params)))
+    (let [[family params-list] value]
+      (doseq [params params-list]
+        (apply put-add put-op family params))))
   put-op)
 
 (defn put*
