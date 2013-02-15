@@ -16,6 +16,9 @@
     (swap! *admin* #(or % (HBaseAdmin. (HBaseConfiguration/create)))))
   @*admin*)
 
+(defn hbase-admin* ^HBaseAdmin [config-map]
+  (HBaseAdmin. (get-config-object config-map)))
+
 ;;
 ;; HColumnDescriptor
 ;;
