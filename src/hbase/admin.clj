@@ -13,8 +13,14 @@
                                            HBaseAdmin
                                            RowLock
                                            Get Put Delete Scan Result)
-           [org.apache.hadoop.hbase.util Bytes])
+           (org.apache.hadoop.hbase.util Bytes)
+           (org.apache.hadoop.hbase.io.hfile Compression$Algorithm))
   (:require (clojure [pprint :as p])))
+
+(def gz Compression$Algorithm/GZ)
+(def lzo Compression$Algorithm/LZO)
+(def snappy Compression$Algorithm/SNAPPY)
+(def none Compression$Algorithm/NONE)
 
 ;;; Using HTable
 ;;; Use hb/default-config or hb/default-config*
@@ -163,3 +169,22 @@
             :requests-count (.getRequestsCount status)
             :servers-size (.getServersSize status)
             :version (.getVersion status)})))
+
+;;;
+(defn start-compression
+  [table family-name & {:keys [compression-type] :or {compression-type snappy}}]
+  (let [column-descriptor (ha/column-descriptor family-name
+                                                :compression-type compression-type)]
+    (ha/disable-table table)
+    (ha/modify-column-family table column-descriptor)
+    (ha/enable-table table)
+    (ha/major-compact table)))
+
+(defn disable-compression
+  [table family-name]
+  (let [column-descriptor (ha/column-descriptor family-name
+                                                :compression-type none)]
+    (ha/disable-table table)
+    (ha/modify-column-family table column-descriptor)
+    (ha/enable-table table)
+    (ha/major-compact table)))
