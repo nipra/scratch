@@ -2,3 +2,5 @@ TODOs:
 
 * Find a way to return first and last cells only for a row, lexicographcialy sorted
   by column qualifier.
+
+* Find all tables with major compaction in progress.     
