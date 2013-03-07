@@ -14,13 +14,21 @@
                                            RowLock
                                            Get Put Delete Scan Result)
            (org.apache.hadoop.hbase.util Bytes)
-           (org.apache.hadoop.hbase.io.hfile Compression$Algorithm))
-  (:require (clojure [pprint :as p])))
+           (org.apache.hadoop.hbase.io.hfile Compression$Algorithm)
+           (org.apache.hadoop.hbase.regionserver.compactions CompactionRequest$CompactionState))
+  (:require (clojure [pprint :as p]))
+  (:require (utils [seq :as seq])))
 
 (def gz Compression$Algorithm/GZ)
 (def lzo Compression$Algorithm/LZO)
 (def snappy Compression$Algorithm/SNAPPY)
 (def none Compression$Algorithm/NONE)
+
+(def major CompactionRequest$CompactionState/MAJOR)
+(def major-and-minor CompactionRequest$CompactionState/MAJOR_AND_MINOR)
+(def minor CompactionRequest$CompactionState/MINOR)
+(def no-compaction CompactionRequest$CompactionState/NONE)
+(def compaction-states #{major major-and-minor minor})
 
 ;;; Using HTable
 ;;; Use hb/default-config or hb/default-config*
@@ -188,3 +196,60 @@
     (ha/modify-column-family table column-descriptor)
     (ha/enable-table table)
     (ha/major-compact table)))
+
+;;; Compaction
+(defn get-compaction-state
+  [table-name]
+  (.getCompactionState @ha/*admin* (Bytes/toBytes table-name)))
+
+(defn table-compacting?
+  [table-name & {:keys [compaction-state] :or {compaction-state :any}}]
+  (let [table-compaction-state (get-compaction-state table-name)]
+    (if (= compaction-state :any)
+      (boolean (compaction-states table-compaction-state))
+      (= compaction-state table-compaction-state))))
+
+(defn get-compacting-tables
+  [tables & {:keys [compaction-state] :or {compaction-state :any}}]
+  (doall (filter #(table-compacting? % :compaction-state compaction-state) tables)))
+
+(defn get-all-compacting-tables
+  [& {:keys [compaction-state] :or {compaction-state :any}}]
+  (let [tables (list-tables)]
+    (get-compacting-tables tables :compaction-state compaction-state)))
+
+;;;
+(defn compression-enabled?
+  [table-name column-family]
+  (let [table-descriptor (.getTableDescriptor @ha/*admin* (Bytes/toBytes table-name))
+        column-descriptors (.getFamilies table-descriptor)]
+    (if-let [column-descriptor (seq/find-first #(= (hu/as-str (.getName %)) column-family) column-descriptors)]
+      (not= (.getCompression column-descriptor) none)
+      false)))
+
+(defn get-column-families
+  [table-name]
+  (let [table-descriptor (.getTableDescriptor @ha/*admin* (Bytes/toBytes table-name))
+        column-descriptors (.getFamilies table-descriptor)]
+    (map #(hu/as-str (.getName %)) column-descriptors)))
+
+(defn find-tables-with-column-family
+  ([column-family]
+     (find-tables-with-column-family (list-tables) column-family))
+  ([tables column-family]
+     (filter (fn [table]
+               (seq/include? column-family (get-column-families table)))
+             tables)))
+
+(defn find-tables-with-no-compression
+  ([column-family]
+     (let [tables (find-tables-with-column-family column-family)]
+       (remove #(compression-enabled? % column-family) tables)))
+  ([tables column-family]
+     (let [tables (find-tables-with-column-family tables column-family)]
+       (remove #(compression-enabled? % column-family) tables))))
+
+;;; TODOS
+(defn get-alter-status
+  "HBaseAdmin"
+  [])
