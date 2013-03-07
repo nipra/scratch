@@ -139,6 +139,7 @@
   (.isMasterRunning @*admin*))
 
 (defn table-available?
+  "`true' if all regions of the table are available."
   [table-name]
   (.isTableAvailable @*admin* (to-bytes table-name)))
 
