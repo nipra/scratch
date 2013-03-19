@@ -98,8 +98,9 @@
 
 ;;; Row filters
 (defn row-filter-with-regex
-  [regex]
-  (RowFilter. eq (regex-string-comparator regex)))
+  [regex & {:keys [compare-op]
+            :or {compare-op eq}}]
+  (RowFilter. compare-op (regex-string-comparator regex)))
 
 (defn row-prefix-filter
   [prefix]
