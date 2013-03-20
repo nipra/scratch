@@ -15,7 +15,8 @@
                                            Get Put Delete Scan Result)
            (org.apache.hadoop.hbase.util Bytes)
            (org.apache.hadoop.hbase.io.hfile Compression$Algorithm)
-           (org.apache.hadoop.hbase.regionserver.compactions CompactionRequest$CompactionState))
+           (org.apache.hadoop.hbase.regionserver.compactions CompactionRequest$CompactionState)
+           (org.apache.hadoop.hbase.regionserver StoreFile$BloomType))
   (:require (clojure [pprint :as p]))
   (:require (utils [seq :as seq])))
 
@@ -29,6 +30,11 @@
 (def minor CompactionRequest$CompactionState/MINOR)
 (def no-compaction CompactionRequest$CompactionState/NONE)
 (def compaction-states #{major major-and-minor minor})
+
+;;; Bloom filter types
+(def no-bloom StoreFile$BloomType/NONE)
+(def row-bloom StoreFile$BloomType/ROW)
+(def row-column-bloom StoreFile$BloomType/ROWCOL)
 
 ;;; Using HTable
 ;;; Use hb/default-config or hb/default-config*
