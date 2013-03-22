@@ -4,3 +4,5 @@ TODOs:
   by column qualifier.
 
 * Find all tables with major compaction in progress.     
+
+* Find first row and last row for a table.
