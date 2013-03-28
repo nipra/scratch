@@ -47,3 +47,14 @@
   "`date' in yyyyMMdd format."
   [date]
   (ctco/to-long (ctf/parse yyyyMMdd date)))
+
+(comment
+  ;; Examples
+  (ctc/days 1)
+  (ctc/plus (ctc/now) (ctc/days 1))
+  (ctco/to-long (ctf/parse (:basic-date-time-no-ms ctf/formatters) "20120101T000000Z"))
+  (ctco/to-date (ctco/to-long (ctf/parse (:basic-date ctf/formatters) "20120301")))
+  (ctco/to-date-time (ctco/to-long (ctf/parse (:basic-date ctf/formatters) "20120301")))
+  (ctco/to-long (ctl/to-local-date-time (ctf/parse utils.date-time/yyyyMMdd "20120301")))
+  (ctf/unparse (:basic-date ctf/formatters)
+               (ctf/parse (:basic-date ctf/formatters) "20120301")))
