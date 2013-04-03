@@ -156,6 +156,35 @@
                :columns columns
                :key-only? key-only?))
 
+(defn get-nth-row-key
+  "`n' must be >= to `caching'"
+  [table-name start-row stop-row n & {:keys [caching]
+                                      :or {caching 1000}}]
+  (hb/with-table [table (hb/table table-name)]
+    (hb/with-scanner [scanner (u/scan* table
+                                       :start-row start-row
+                                       :stop-row stop-row
+                                       :caching caching
+                                       :filter (f/sanitize-filters nil true))]
+      (loop [result (.next scanner caching)
+             num-keys (count result)
+             m num-keys]
+        (if (seq result)
+          (cond
+            (= m n)
+            (u/result->key (last result))
+
+            (> m n)
+            (u/result->key (nth result (dec (mod n caching))))
+
+            :else
+            (let [result2 (.next scanner caching)
+                  num-keys2 (count result2)
+                  m2 (+ m num-keys2)]
+              (recur result2 num-keys2 m2)))
+
+          (u/result->key (last result)))))))
+
 
 (comment
   (fetch-row "table" "row-key")
