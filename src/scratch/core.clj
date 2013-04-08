@@ -141,3 +141,6 @@
   (dt/yyyymmdd->millis "20120101")
   (ctco/to-long (ctl/to-local-date-time (ctf/parse utils.date-time/yyyyMMdd "20120101")))
   (ctf/parse (:basic-date-time-no-ms ctf/formatters) "20120101T000000Z"))
+
+(comment
+  (line-seq (io/reader "/tmp/foo.txt")))
