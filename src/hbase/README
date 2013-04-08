@@ -6,3 +6,6 @@ TODOs:
 * Find all tables with major compaction in progress.     
 
 * Find first row and last row for a table.
+
+* Find row keys/count with some constraint on row keys (Regex etc). Function will take start and end key.
+  * Return first `n' keys.
