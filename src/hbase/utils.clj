@@ -22,6 +22,8 @@
            [org.apache.hadoop.hbase.util Bytes])
   (:require [clojure.pprint :as p]))
 
+(def ^{:dynamic true} *conf* nil)
+
 ;;  A file called hbase-site.xml lives in the conf directory inside the HBase
 ;; root folder. This file will need to be copied into a location on the JVM’s
 ;; classpath and will need to contain some information regarding your
@@ -106,3 +108,54 @@
   [table & opts]
   (let [opts* (sanitize-opts opts)]
     (apply (partial hb/scan table) opts*)))
+
+;;;
+(defn htable
+  [table-name]
+  (HTable. *conf* (Bytes/toBytes table-name)))
+
+(defmacro with-htable
+  [bindings & body]
+  {:pre [(vector? bindings)
+         (even? (count bindings))]}
+  (cond
+    (= (count bindings) 0) `(do ~@body)
+    (symbol? (bindings 0)) `(let ~(subvec bindings 0 2)
+                              (try
+                                (with-htable ~(subvec bindings 2) ~@body)
+                                (finally
+                                  (.close ~(bindings 0)))))
+    :else (throw (IllegalArgumentException.
+                  "Bindings must be symbols."))))
+
+(defn pair->vec
+  [pair]
+  (map #(vector (hu/as-str %) (hu/as-str %2))
+       (.getFirst pair) (.getSecond pair)))
+
+(defn get-start-end-keys
+  [table-name]
+  (with-htable [table (htable table-name)]
+    (pair->vec (.getStartEndKeys table))))
+
+(defn row-key->del
+  [row-key]
+  (Delete. (Bytes/toBytes row-key)))
+
+(defn row-keys->dels
+  [row-keys]
+  (map row-key->del row-keys))
+
+(defn del-row
+  [table-name row-key]
+  (hb/with-table [table (hb/table table-name)]
+    (.delete table (row-key->del row-key))))
+
+(defn del-rows
+  [table-name row-keys]
+  (hb/with-table [table (hb/table table-name)]
+    (.delete table (row-keys->dels row-keys))))
+
+(comment
+  (with-htable [table (htable "table-name")]
+    (doall (pair->vec (.getStartEndKeys table)))))
