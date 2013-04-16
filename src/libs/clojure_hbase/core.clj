@@ -562,27 +562,39 @@
   (doseq [[ts-op timestamp specs] (partition 3 ts-specs)
           spec specs]
     (condp = ts-op
-        :with-timestamp
+
+      :with-timestamp
       (condp = (first spec)
-          :column
+
+        :column
         (apply #(delete-column-with-timestamp delete-op %1 %2 timestamp)
                (rest spec))
-        :columns (let [[family quals] (rest spec)]
-                   (doseq [q quals]
-                     (delete-column-with-timestamp
-                       delete-op family q timestamp))))
+        
+        :columns
+        (let [[family quals] (rest spec)]
+          (doseq [q quals]
+            (delete-column-with-timestamp
+              delete-op family q timestamp))))
+      
       :with-timestamp-before
       (condp = (first spec)
-          :column
+
+        :column
         (apply #(delete-column-before-timestamp delete-op %1 %2 timestamp)
                (rest spec))
-        :columns (let [[family quals] (rest spec)]
-                   (doseq [q quals]
-                     (delete-column-before-timestamp
-                      delete-op family q timestamp)))
-        :family (delete-family-timestamp delete-op (second spec) timestamp)
-        :families (doseq [f (rest spec)]
-                    (delete-family-timestamp delete-op f timestamp))))))
+        
+        :columns
+        (let [[family quals] (rest spec)]
+          (doseq [q quals]
+            (delete-column-before-timestamp
+             delete-op family q timestamp)))
+        
+        :family
+        (delete-family-timestamp delete-op (second spec) timestamp)
+        
+        :families
+        (doseq [f (rest spec)]
+          (delete-family-timestamp delete-op f timestamp))))))
 
 (defn delete*
   "Returns a Delete object suitable for performing a delete on an HTable. To
