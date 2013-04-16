@@ -1,6 +1,7 @@
 (ns utils.date-time
-  (:import (org.joda.time Period Seconds DateTime))
+  (:import (org.joda.time Period Seconds DateTime DateTimeZone))
   (:import (org.joda.time.format PeriodFormatterBuilder PeriodFormatter))
+  (:import (java.util TimeZone))
   (:require (clj-time [core :as ctc]
                       [format :as ctf]
                       [coerce :as ctco]
@@ -8,6 +9,35 @@
 
 ;;; http://joda-time.sourceforge.net/api-release/index.html?org/joda/time/format/ISODateTimeFormat.html
 (def yyyyMMdd (ctf/formatter "yyyyMMdd"))
+
+;;; http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+;;; http://www.iana.org/time-zones
+;;; http://joda-time.sourceforge.net/api-release/index.html?org/joda/time/DateTimeZone.html
+
+(defn get-tz-ids
+  []
+  (vec (sort (DateTimeZone/getAvailableIDs))))
+
+(defn get-tz-display-names
+  []
+  (sort (distinct (map (fn [x] (.getDisplayName (TimeZone/getTimeZone x)))
+                       (TimeZone/getAvailableIDs)))))
+
+(defn get-tz-display-names*
+  []
+  (reduce (fn [result x]
+            (let [display-name (.getDisplayName (TimeZone/getTimeZone x))]
+              (update-in result [display-name] conj x)))
+          {}
+          (TimeZone/getAvailableIDs)))
+
+(defn get-tz-display-names+
+  []
+  (reduce (fn [result x]
+            (let [display-name (.getDisplayName (.toTimeZone (ctc/time-zone-for-id x)))]
+              (update-in result [display-name] conj x)))
+          {}
+          (get-tz-ids)))
 
 ;;; FIXME: Incomplete
 (defn readable-secs
@@ -47,6 +77,10 @@
   "`date' in yyyyMMdd format."
   [date]
   (ctco/to-long (ctf/parse yyyyMMdd date)))
+
+(defn days->secs
+  [days]
+  (.getSeconds (.toStandardSeconds (ctc/days days))))
 
 (comment
   ;; Examples
