@@ -82,6 +82,44 @@
   [days]
   (.getSeconds (.toStandardSeconds (ctc/days days))))
 
+;;; Time between 2 datetimes
+(defn range->ms
+  [start end]
+  (ctc/in-msecs (ctc/interval start end)))
+
+(defn range->secs
+  [start end]
+  (ctc/in-secs (ctc/interval start end)))
+
+(defn range->mins
+  [start end]
+  (ctc/in-minutes (ctc/interval start end)))
+
+(defn range->hours
+  [start end]
+  (ctc/in-hours (ctc/interval start end)))
+
+(defn range->days
+  [start end]
+  (ctc/in-days (ctc/interval start end)))
+
+(defn range->weeks
+  [start end]
+  (ctc/in-days (ctc/interval start end)))
+
+(defn range->months
+  [start end]
+  (ctc/in-months (ctc/interval start end)))
+
+(defn range->years
+  [start end]
+  (ctc/in-years (ctc/interval start end)))
+
+;;;
+(defn within?
+  [start end date]
+  (ctc/within? (ctc/interval start end) date))
+
 (comment
   ;; Examples
   (ctc/days 1)
@@ -91,4 +129,12 @@
   (ctco/to-date-time (ctco/to-long (ctf/parse (:basic-date ctf/formatters) "20120301")))
   (ctco/to-long (ctl/to-local-date-time (ctf/parse utils.date-time/yyyyMMdd "20120301")))
   (ctf/unparse (:basic-date ctf/formatters)
-               (ctf/parse (:basic-date ctf/formatters) "20120301")))
+               (ctf/parse (:basic-date ctf/formatters) "20120301"))
+  (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-04-17T05:30Z"))
+
+(comment
+  (range->secs (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-04-17T05:30Z")
+               (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-04-17T06:30Z"))
+  (within? (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-04-17T05:30Z")
+           (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-07-18T06:30Z")
+           (ctf/parse (ctf/formatter "yyyy-MM-dd'T'HH:mmZZ") "2013-07-18T05:30Z")))
