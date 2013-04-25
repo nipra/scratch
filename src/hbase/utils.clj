@@ -156,6 +156,35 @@
   (hb/with-table [table (hb/table table-name)]
     (.delete table (row-keys->dels row-keys))))
 
+(defn cell->row-key
+  [cell]
+  (first cell))
+
+;;; 
+(defn cell->column-family
+  [cell]
+  (second cell))
+
+(defn cell->column-qualifier
+  [cell]
+  (nth cell 2))
+
+(defn cell->date-time
+  [cell]
+  (nth cell 3))
+
+(defn cell->timestamp
+  [cell]
+  (ctco/to-long (cell->date-time cell)))
+
+(defn cell->value
+  [cell]
+  (nth cell 4))
+
+(defn result->cells
+  [result]
+  (apply concat result))
+
 (comment
   (with-htable [table (htable "table-name")]
     (doall (pair->vec (.getStartEndKeys table)))))
