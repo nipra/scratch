@@ -158,33 +158,49 @@
 
 (defn get-nth-row-key
   "`n' must be >= to `caching'"
-  [table-name start-row stop-row n & {:keys [caching]
+  [table-name start-row stop-row n & {:keys [caching filters]
                                       :or {caching 1000}}]
-  (hb/with-table [table (hb/table table-name)]
-    (hb/with-scanner [scanner (u/scan* table
-                                       :start-row start-row
-                                       :stop-row stop-row
-                                       :caching caching
-                                       :filter (f/sanitize-filters nil true))]
-      (loop [result (.next scanner caching)
-             num-keys (count result)
-             m num-keys]
-        (if (seq result)
-          (cond
-            (= m n)
-            (u/result->key (last result))
+  (try
+    (hb/with-table [table (hb/table table-name)]
+      (hb/with-scanner [scanner (u/scan* table
+                                         :start-row start-row
+                                         :stop-row stop-row
+                                         :caching caching
+                                         :filter (f/sanitize-filters filters true))]
+        (loop [result (.next scanner caching)
+               num-keys (count result)
+               m num-keys]
+          (if (seq result)
+            (cond
+              (= m n)
+              (u/result->key (last result))
 
-            (> m n)
-            (u/result->key (nth result (dec (mod n caching))))
+              (> m n)
+              (u/result->key (nth result (dec (mod n caching))))
 
-            :else
-            (let [result2 (.next scanner caching)
-                  num-keys2 (count result2)
-                  m2 (+ m num-keys2)]
-              (recur result2 num-keys2 m2)))
+              :else
+              (let [result2 (.next scanner caching)
+                    num-keys2 (count result2)
+                    m2 (+ m num-keys2)]
+                (recur result2 num-keys2 m2)))
 
-          (u/result->key (last result)))))))
+            (u/result->key (last result))))))
+    (catch NullPointerException _ nil)))
 
+(defn get-rows-with-pagination
+  [table-name start-row stop-row offset limit & {:keys [caching filters row-as key-only?]
+                                                 :or {caching 1000
+                                                      row-as (if key-only? u/result->key u/as-vector)}}]
+  (when-let [row-offset (get-nth-row-key table-name start-row stop-row offset
+                                         :caching caching
+                                         :filters filters)]
+    (fetch-rows table-name row-offset stop-row
+                :limit limit
+                :caching caching
+                :batch caching
+                :filters filters
+                :row-as row-as
+                :key-only? key-only?)))
 
 (comment
   (fetch-row "table" "row-key")
