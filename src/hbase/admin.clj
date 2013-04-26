@@ -259,3 +259,7 @@
 (defn get-alter-status
   "HBaseAdmin"
   [])
+
+;;; 
+(comment
+  (get-all-compacting-tables :compaction-state a/major))
