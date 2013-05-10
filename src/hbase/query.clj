@@ -202,6 +202,22 @@
                 :row-as row-as
                 :key-only? key-only?)))
 
+(defn get-rows-with-pagination*
+  [table-name start-row stop-row offset limit & {:keys [caching filters row-as key-only?]
+                                                 :or {caching 1000
+                                                      row-as (if key-only? u/result->key u/as-vector)}}]
+  (when-let [row-offset (get-nth-row-key table-name start-row stop-row offset
+                                         :caching caching
+                                         :filters filters
+                                         :key-only? key-only?)]
+    (fetch-rows table-name row-offset stop-row
+                :limit limit
+                :caching caching
+                :batch caching
+                :filters filters
+                :row-as row-as
+                :key-only? false)))
+
 (comment
   (fetch-row "table" "row-key")
   (fetch-row "table" "row-key"
