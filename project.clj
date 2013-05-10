@@ -247,6 +247,10 @@
                  ;; https://github.com/jashmenn/clj-file-utils
                  [clj-file-utils "0.2.1"]
 
+                 ;; Runa's core utilities. Please use and enjoy.
+                 ;; https://github.com/runa-dev/kits
+                 [org.clojars.runa/kits "1.5.1"]
+
                  
                  ;; Others [Not on Clojars, Old, ...]
                  ;; * https://github.com/nathanmarz/storm/blob/master/src/clj/backtype/storm/util.clj [Not a lib]
