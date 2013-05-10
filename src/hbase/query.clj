@@ -158,15 +158,16 @@
 
 (defn get-nth-row-key
   "`n' must be >= to `caching'"
-  [table-name start-row stop-row n & {:keys [caching filters]
-                                      :or {caching 1000}}]
+  [table-name start-row stop-row n & {:keys [caching filters key-only?]
+                                      :or {caching 1000
+                                           key-only? true}}]
   (try
     (hb/with-table [table (hb/table table-name)]
       (hb/with-scanner [scanner (u/scan* table
                                          :start-row start-row
                                          :stop-row stop-row
                                          :caching caching
-                                         :filter (f/sanitize-filters filters true))]
+                                         :filter (f/sanitize-filters filters key-only?))]
         (loop [result (.next scanner caching)
                num-keys (count result)
                m num-keys]
@@ -193,7 +194,8 @@
                                                       row-as (if key-only? u/result->key u/as-vector)}}]
   (when-let [row-offset (get-nth-row-key table-name start-row stop-row offset
                                          :caching caching
-                                         :filters filters)]
+                                         :filters filters
+                                         :key-only? key-only?)]
     (fetch-rows table-name row-offset stop-row
                 :limit limit
                 :caching caching
