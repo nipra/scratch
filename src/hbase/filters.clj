@@ -22,8 +22,12 @@
                                            BitComparator
                                            BitComparator$BitwiseOp
                                            RegexStringComparator
-                                           SubstringComparator)
+                                           SubstringComparator
+                                           FilterList$Operator)
            (org.apache.hadoop.hbase.util Bytes)))
+
+(def must-pass-all FilterList$Operator/MUST_PASS_ALL)
+(def must-pass-one FilterList$Operator/MUST_PASS_ONE)
 
 (def eq CompareFilter$CompareOp/EQUAL)
 (def gt CompareFilter$CompareOp/GREATER)
@@ -158,3 +162,10 @@
       (if (instance? FilterList filters*)
         filters*
         (FilterList. filters*)))))
+
+;;;
+(defn filter-list
+  ([filters]
+     (filter-list filters must-pass-all))
+  ([filters operator]
+     (FilterList. operator filters)))
