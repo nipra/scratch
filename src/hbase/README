@@ -9,3 +9,6 @@ TODOs:
 
 * Find row keys/count with some constraint on row keys (Regex etc). Function will take start and end key.
   * Return first `n' keys.
+
+* Find data size stored in HBase cluster.
+  * Will be used for finding delta data size change.
