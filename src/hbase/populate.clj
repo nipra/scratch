@@ -1,4 +1,4 @@
-(ns hbase.ss.populate
+(ns hbase.populate
   (:require (utils [date-time :as dt]
                    [seq :as seq]))
   (:require (libs.clojure-hbase [core :as hb]
@@ -41,12 +41,23 @@
   (map #(apply str %) (combo/cartesian-product digits digits)))
 
 (defn populate
-  [table-name date-string seed-key-coll]
+  [table-name date-string seed-key-coll & {:keys [qualifiers]}]
   (doseq [row-key (get-keys seed-key-coll)]
     (hb/with-table [table (hb/table table-name)]
       (let [dt (ctf/parse (:basic-date-time-no-ms ctf/formatters) date-string)]
         (doall
          (map #(hb/put table row-key
                        :values ["f" [%1 (str (rand-int 1000)) (ctco/to-long %2)]])
-              (get-qualifiers)
+              (or qualifiers (get-qualifiers))
+              (iterate #(ctc/plus % (ctc/days 1)) dt)))))))
+
+(defn populate*
+  [table-name date-string seed-key-coll & {:keys [qualifiers]}]
+  (doseq [row-key (get-keys seed-key-coll)]
+    (hb/with-table [table (hb/table table-name)]
+      (let [dt (ctf/parse (:basic-date-time-no-ms ctf/formatters) date-string)]
+        (doall
+         (map #(hb/put table row-key
+                       :values ["f" [%1 (rand-int 1000) (ctco/to-long %2)]])
+              (or qualifiers (get-qualifiers))
               (iterate #(ctc/plus % (ctc/days 1)) dt)))))))

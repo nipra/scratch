@@ -17,8 +17,10 @@
                  ;; Clojure wrapper for Apache DBCP to create JDBC connections pools
                  [clj-dbcp "0.8.0"]
 
-                 [org.apache.lucene/lucene-core "3.6.0"]
-                 [org.apache.lucene/lucene-queries "3.6.0"]
+                 ;; [org.apache.lucene/lucene-core "3.6.0"]
+                 ;; [org.apache.lucene/lucene-queries "3.6.0"]
+                 [org.apache.lucene/lucene-core "4.3.1"]
+                 [org.apache.lucene/lucene-queries "4.3.1"]
                  [clucy "0.3.0"]
 
                  ;; Core interfaces/classes, external parser libs, GUI, CLI
@@ -327,10 +329,10 @@
 
                  ;; http://mvnrepository.com/artifact/org.apache.hadoop/hadoop-client/2.0.1-alpha
                  ;; [org.apache.hadoop/hadoop-client "2.0.1-alpha"]
-                 [org.apache.hadoop/hadoop-client "2.0.0-cdh4.1.2"]
+                 [org.apache.hadoop/hadoop-client "2.0.0-cdh4.3.0"]
                  
                  ;; [org.apache.hbase/hbase "0.92.1"]
-                 [org.apache.hbase/hbase "0.92.1-cdh4.1.2"]
+                 [org.apache.hbase/hbase "0.94.6-cdh4.3.0"]
                  ;; https://github.com/davidsantiago/clojure-hbase
                  ;; [clojure-hbase "0.90.5-4"]
                  ;; https://github.com/compasslabs/clojure-hbase-schemas
@@ -342,6 +344,20 @@
                  
                  ;; https://github.com/OpenTSDB/asynchbase
                  ;; [org.hbase/asynchbase "1.3.2"]
+
+                 ;; Phoenix: A SQL skin over HBase
+                 ;; https://github.com/forcedotcom/phoenix
+                 ;; mvn install:install-file -Dfile=~/Softwares/HBase/Phoenix/downloads/phoenix-2.0.0-install/phoenix-2.0.0-client.jar -DartifactId=phoenix -Dversion=2.0.0 -DgroupId=com.salesforce -Dpackaging=jar -DlocalRepositoryPath=maven_repo
+                 ;; [com.salesforce/phoenix "1.2.1"]
+                 [com.salesforce/phoenix "2.0.0"]
+                 [com.google.guava/guava "14.0.1"]
+
+                 ;; Oozie
+                 ;; http://archive.cloudera.com/cdh4/cdh/4/oozie-3.3.2-cdh4.3.0/client/apidocs/index.html
+                 [org.apache.oozie/oozie-client "3.3.2-cdh4.3.0"]
+
+                 ;; http://archive.cloudera.com/cdh4/cdh/4/oozie-3.3.2-cdh4.3.0/core/apidocs/index.html
+                 [org.apache.oozie/oozie-core "3.3.2-cdh4.3.0"]
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Devops/Sysadmin
@@ -376,6 +392,14 @@
                  ;; Benchmarking library for clojure
                  ;; https://github.com/hugoduncan/criterium
                  [criterium "0.3.1"]
+                 
+                 ;; Memory consumption estimator for Java
+                 ;; https://github.com/dweiss/java-sizeof
+                 [com.carrotsearch/java-sizeof "0.0.3"]
+
+                 ;; Java Agent for Memory Measurements
+                 ;; https://github.com/jbellis/jamm
+                 [com.github.stephenc/jamm "0.2.5"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -413,6 +437,11 @@
                  ;; Clojure library for fake data generation, port of ruby faker
                  ;; https://github.com/paraseba/faker
                  [faker "0.2.2"]
+
+                 ;; Thrift
+                 ;; http://thrift.apache.org/tutorial/java/
+                 ;; http://thrift.apache.org/download/
+                 [org.apache.thrift/libthrift "0.9.0"]
                  
                  ;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Clojure core libs
@@ -453,15 +482,23 @@
                  [org.clojure/tools.nrepl "0.0.5"]
                  [org.clojure/tools.trace "0.7.3"]]
 
-  :dev-dependencies [[swank-clojure "1.4.0"]
-                     [lein-localrepo "0.3"]
-                     [clj-ns-browser "1.3.0"]]
+  ;; For lein < 1.7.0
+  ;; :dev-dependencies [[swank-clojure "1.4.0"]
+  ;;                    [lein-localrepo "0.3"]
+  ;;                    [clj-ns-browser "1.3.0"]]
+
+  ;; for lein >= 1.7.0
+  ;; https://github.com/technomancy/swank-clojure/tree/master/lein-swank
+  :plugins [[lein-swank "1.4.5"]]
+  
   :repositories {
                  ;; Required for snapshots.
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
                  "local" ~(str (.toURI (java.io.File. "maven_repo")))
-                 "cloudera-repos" "https://repository.cloudera.com/artifactory/cloudera-repos/"}
+                 "cloudera-repos" "https://repository.cloudera.com/artifactory/cloudera-repos/"
+                 "phoenix-github" "https://raw.github.com/forcedotcom/phoenix/maven-artifacts/releases"}
   ;; :resource-paths ["resource"]
+  ;; :jvm-opts ["-javaagent:lib/jamm-0.2.5.jar"]
   :main scratch.main)
 

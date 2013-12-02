@@ -15,6 +15,11 @@
   [arg]
   (Bytes/toString arg))
 
+(defn as-long
+  "Takes a byte-array and turns it into a string."
+  [arg]
+  (Bytes/toLong arg))
+
 (defn as-sym
   "Takes a byte-array and turns it into a symbol."
   [arg]

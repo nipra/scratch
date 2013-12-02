@@ -243,9 +243,10 @@
   ([column-family]
      (find-tables-with-column-family (list-tables) column-family))
   ([tables column-family]
-     (filter (fn [table]
-               (seq/include? column-family (get-column-families table)))
-             tables)))
+     (doall
+      (filter (fn [table]
+                (seq/include? column-family (get-column-families table)))
+              tables))))
 
 (defn find-tables-with-no-compression
   ([column-family]

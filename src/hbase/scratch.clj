@@ -1,7 +1,7 @@
 (ns hbase.scratch
   (:gen-class)
   (:require [libs.clojure-hbase [core :as hb] [util :as hu] [admin :as ha]])
-  (:require [libs.com.compass.hbase.client :as c])
+  ;; (:require [libs.com.compass.hbase.client :as c])
   (:require [clojure.java.classpath :as cp])
   (:import [java.util Set]
            [org.apache.hadoop.hbase HBaseConfiguration HConstants KeyValue]

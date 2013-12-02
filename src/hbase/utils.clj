@@ -1,7 +1,7 @@
 (ns hbase.utils
   (:gen-class)
   (:require [libs.clojure-hbase [core :as hb] [util :as hu] [admin :as ha]])
-  (:require [libs.com.compass.hbase.client :as c])
+  ;; (:require [libs.com.compass.hbase.client :as c])
   (:require (clj-time [core :as ctc]
                       [format :as ctf]
                       [coerce :as ctco]

@@ -144,3 +144,13 @@
 
 (comment
   (line-seq (io/reader "/tmp/foo.txt")))
+
+;;;
+(comment
+  (def *vm (VirtualMachine/attach "82131"))
+  (def *props (.getSystemProperties *vm))
+  (def *home (.getProperty *props "java.home"))
+  (def *agent (str *home (File/separator) "lib" (File/separator) "management-agent.jar"))
+  ;; (.loadAgent *vm *agent "com.sun.management.jmxremote.port=5000")
+  ;; (.detach *vm)
+  )
