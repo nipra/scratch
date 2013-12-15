@@ -489,6 +489,8 @@
 
   ;; for lein >= 1.7.0
   ;; https://github.com/technomancy/swank-clojure/tree/master/lein-swank
+  ;; Note: Is not working with lein 2.x.x. New projects are working though.
+  ;; Let's stick with lein 1.7.1 for now for this project.
   :plugins [[lein-swank "1.4.5"]]
   
   :repositories {
