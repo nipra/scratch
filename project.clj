@@ -5,7 +5,7 @@
   ;; http://dev.clojure.org/display/design/Where+Did+Clojure.Contrib+Go
   ;; http://stackoverflow.com/questions/7511789/clojure-lein-how-do-i-include-a-java-file-in-my-project
   ;; http://alexott.net/en/clojure/ClojureLein.html
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
 
                  [postgresql/postgresql "9.0-801.jdbc4"]
                  [mysql/mysql-connector-java "5.1.18"]
@@ -17,10 +17,13 @@
                  ;; Clojure wrapper for Apache DBCP to create JDBC connections pools
                  [clj-dbcp "0.8.0"]
 
-                 ;; [org.apache.lucene/lucene-core "3.6.0"]
-                 ;; [org.apache.lucene/lucene-queries "3.6.0"]
-                 [org.apache.lucene/lucene-core "4.3.1"]
-                 [org.apache.lucene/lucene-queries "4.3.1"]
+                 [org.apache.lucene/lucene-core "3.6.0"]
+                 [org.apache.lucene/lucene-queries "3.6.0"]
+
+                 ;; [org.apache.lucene/lucene-core "4.7.0"]
+                 ;; [org.apache.lucene/lucene-analyzers-common "4.7.0"]
+                 ;; [org.apache.lucene/lucene-queryparser "4.7.0"]
+                 ;; [org.apache.lucene/lucene-queries "4.7.0"]
                  [clucy "0.3.0"]
 
                  ;; Core interfaces/classes, external parser libs, GUI, CLI
@@ -43,7 +46,7 @@
 
                  ;; Clojure Redis client & message queue
                  ;; https://github.com/ptaoussanis/carmine
-                 [com.taoensso/carmine "1.2.1"]
+                 [com.taoensso/carmine "2.4.6"]
                  
                  ;; redis-clojure is the oldest of several Clojure client libraries for Redis.
                  ;; If you are currently trying to choose which of these client libraries to use,
@@ -51,15 +54,15 @@
                  ;; better connection pooling, support for newer features of Redis 2.0+, Leiningen 2.0
                  ;; support, more flexible serialization, and is faster.
                  ;; https://github.com/tavisrudd/redis-clojure
-                 [org.clojars.tavisrudd/redis-clojure "1.3.2"]
+                 ;; [org.clojars.tavisrudd/redis-clojure "1.3.2"]
 
                  ;; Clojure Redis client library
                  ;; https://github.com/mmcgrana/clj-redis
-                 [clj-redis "0.0.12"]
+                 ;; [clj-redis "0.0.12"]
 
                  ;; A Clojure library for redis
                  ;; https://github.com/abedra/accession
-                 [accession "0.1.1" :exclusions [org.clojure/clojure]]
+                 ;; [accession "0.1.1" :exclusions [org.clojure/clojure]]
 
                  ;; Redis client library for clojure
                  ;; https://github.com/wallrat/labs-redis-clojure
@@ -74,67 +77,67 @@
 
                  ;; Quarzite is a powerful Clojure scheduling library built on
                  ;; top the Quartz Scheduler.
-                 [clojurewerkz/quartzite "1.0.0-rc5"]
+                 [clojurewerkz/quartzite "1.2.0"]
 
                  [com.rabbitmq/amqp-client "2.7.1"]
                  ;; Langohr is a Clojure wrapper around the RabbitMQ Java client
-                 [com.novemberain/langohr "1.0.0-beta2"]
+                 [com.novemberain/langohr "2.3.2"]
 
                  ;; [org.mongodb/mongo-java-driver "2.10.1"]
                  ;; Monger is an idiomatic Clojure MongoDB driver for a more
                  ;; civilized age.
-                 [com.novemberain/monger "1.4.2"]
+                 [com.novemberain/monger "1.7.0"]
                  
                  ;; http://neo4j.org/download/
-                 [org.neo4j/neo4j "1.7.1"]
+                 ;; [org.neo4j/neo4j "1.7.1"]
                  ;; A Neo4j library for Clojure
-                 [clojure-neo4j "0.3.0-SNAPSHOT"]
+                 ;; [clojure-neo4j "0.3.0-SNAPSHOT"]
                  ;; Clojure wrapper for Neo4j, a graph database.
                  ;; https://github.com/wagjo/borneo
-                 [borneo "0.3.0"]
+                 [borneo "0.4.0"]
                  ;; https://github.com/scusack/neo4j-clj
-                 [neo4j-clj "0.0.2-SNAPSHOT"]
+                 ;; [neo4j-clj "0.0.2-SNAPSHOT"]
                  ;; Neocons, a Clojure client for the Neo4J REST API
                  ;; https://github.com/michaelklishin/neocons
-                 [clojurewerkz/neocons "1.0.0"]
+                 [clojurewerkz/neocons "2.0.1"]
 
                  ;; Welle is an expressive Clojure client for Riak with
                  ;; batteries included.
-                 [com.novemberain/welle "1.1.0"]
+                 [com.novemberain/welle "2.0.0-beta1"]
 
                  ;; Clojure OAuth library
                  ;; https://github.com/r0man/oauth-clj
-                 [oauth-clj "0.0.5"]
+                 ;; [oauth-clj "0.0.5"]
                  ;; OAuth Consumer support for Clojure
                  ;; https://github.com/mattrepl/clj-oauth
                  ;; [clj-oauth "1.2.10"] ; Don't use brings clojure-contrib
-                 [clj-oauth "1.3.1-SNAPSHOT"]
+                 ;; [clj-oauth "1.3.1-SNAPSHOT"]
 
                  ;; A simple and flexible library for shelling out in Clojure
                  ;; https://github.com/Raynes/conch
-                 [conch "0.2.1"]
+                 [me.raynes/conch "0.5.0"]
 
                  [javax.mail/mail "1.4.1"]
                  ;; Postal is a library for constructing and sending
                  ;; RFC822-compliant Internet email messages.
                  ;; https://github.com/drewr/postal
-                 [com.draines/postal "1.8.0"]
+                 [com.draines/postal "1.11.1"]
                  ;; Mailer is an ActionMailer-inspired mailer library for Clojure.
                  ;; https://github.com/clojurewerkz/mailer
-                 [clojurewerkz/mailer "1.0.0-alpha3"]
+                 [clojurewerkz/mailer "1.0.0"]
 
                  ;; A Clojure HTTP library wrapping the Apache
                  ;; HttpComponents client.
                  ;; https://github.com/dakrone/clj-http
-                 [clj-http "0.4.2"]
+                 [clj-http "0.7.9"]
                  ;; http.async.client is based on Asynchronous Http Client
                  ;; for Java.
                  ;; https://github.com/neotyk/http.async.client
-                 [http.async.client "0.4.5"]
+                 [http.async.client "0.5.2"]
 
                  ;; Async io interface to all the twitter APIs
                  ;; https://github.com/adamwynne/twitter-api
-                 [twitter-api "0.6.10"]
+                 [twitter-api "0.7.5"]
 
                  ;; Clojure client for Twitter API
                  ;; https://github.com/mattrepl/clojure-twitter
@@ -144,22 +147,22 @@
                  ;; Clojure JSON and JSON SMILE (binary json format)
                  ;; encoding/decoding
                  ;; https://github.com/dakrone/cheshire
-                 [cheshire "5.0.1"]
+                 [cheshire "5.3.1"]
                  
                  ;; Enhanced try and throw for Clojure leveraging Clojure's
                  ;; capabilities 
                  ;; https://github.com/scgilardi/slingshot
-                 [slingshot "0.10.2"]
+                 [slingshot "0.10.3"]
 
                  ;; A clojure wrapper for Reddit API
                  ;; https://github.com/sunng87/reddit.clj
-                 [reddit.clj "0.3.3"]
+                 [reddit.clj "0.4.0"]
 
                  ;; Serialism is A tiny Clojure library that serializes and
                  ;; deserializes values into popular formats based on provided
                  ;; content type.
                  ;; https://github.com/clojurewerkz/serialism
-                 [clojurewerkz/serialism "1.0.0"]
+                 [clojurewerkz/serialism "1.0.1"]
 
                  ;; Latest versions from
                  ;; http://mvnrepository.com/artifact/org.apache.httpcomponents
@@ -170,19 +173,19 @@
 
                  [org.neo4j/neo4j "1.7"]
 
-                 [clj-time "0.4.2"]
+                 
 
                  ;; https://github.com/liebke/incanter
-                 [incanter "1.3.0"]
+                 [incanter "1.5.4"]
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  ;; Web
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
                  
                  ;; https://github.com/weavejester/compojure/
-                 [compojure "1.1.1"]
+                 [compojure "1.1.6"]
                  ;; https://github.com/ring-clojure/ring
-                 [ring "1.1.1"]
+                 [ring "1.2.1"]
 
                  ;; https://github.com/ibdknox/noir
                  ;; A framework for writing clojure websites.
@@ -223,7 +226,7 @@
                  ;; A support library ClojureWerkz projects (Langohr, Monger,
                  ;; Neocons, Elastisch, Quartzite, Money, etc) can rely on
                  ;; https://github.com/clojurewerkz/support
-                 [clojurewerkz/support "0.10.0"]
+                 [clojurewerkz/support "0.19.0"]
                  
                  ;; Misclleneous utility functions and macros in Clojure
                  ;; https://github.com/kumarshantanu/clj-miscutil
@@ -286,7 +289,7 @@
                  
                  ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
                  ;; https://github.com/antoniogarrote/clj-ml
-                 [weka/weka "3.6.7"]
+                 ;; [weka/weka "3.6.7"]
 
                  ;; A clojure DSL for system admin and deployment with
                  ;; many remote machines via ssh
@@ -315,7 +318,7 @@
                  [clojure-opennlp "0.1.10"]
 
                  ;; nipra@unlambda:~/Projects/Clojure/scratch_ss$ mvn install:install-file -Dfile=/home/nipra/Softwares/Java/weka-3-6-7/weka.jar -DartifactId=weka -Dversion=3.6.7 -DgroupId=weka -Dpackaging=jar -DlocalRepositoryPath=maven_repo
-                 [weka/weka "3.6.7"]
+                 ;; [weka/weka "3.6.7"]
 
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -480,7 +483,15 @@
                  [org.clojure/tools.macro "0.1.1"]
                  [org.clojure/tools.namespace "0.2.0"]
                  [org.clojure/tools.nrepl "0.0.5"]
-                 [org.clojure/tools.trace "0.7.3"]]
+                 [org.clojure/tools.trace "0.7.3"]
+
+                 ;; https://github.com/technomancy/swank-clojure
+                 ;; Read section on ``Embedding''
+                 [swank-clojure "1.4.3"]
+
+                 [clj-time "0.6.0"]
+
+                 [org.jsoup/jsoup "1.7.3"]]
 
   ;; For lein < 1.7.0
   ;; :dev-dependencies [[swank-clojure "1.4.0"]
@@ -497,10 +508,11 @@
                  ;; Required for snapshots.
                  "sonatype-oss-public" "https://oss.sonatype.org/content/groups/public/"
                  ;; "sonatype-oss-snapshots" "https://oss.sonatype.org/content/repositories/snapshots"
-                 "local" ~(str (.toURI (java.io.File. "maven_repo")))
+                 ;; "local" ~(str (.toURI (java.io.File. "maven_repo")))
                  "cloudera-repos" "https://repository.cloudera.com/artifactory/cloudera-repos/"
                  "phoenix-github" "https://raw.github.com/forcedotcom/phoenix/maven-artifacts/releases"}
   ;; :resource-paths ["resource"]
   ;; :jvm-opts ["-javaagent:lib/jamm-0.2.5.jar"]
+  ;; :aot :all
   :main scratch.main)
 
