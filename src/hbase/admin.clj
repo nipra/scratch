@@ -142,7 +142,7 @@
 (defn server-load
   [cluster-status server & [regions-load?]]
   (let [load (.getLoad cluster-status server)
-        server-load {:coprocessors (vec (.getCoprocessors load))
+        server-load {:coprocessors (vec (.getRsCoprocessors load))
                      :load (.getLoad load)
                      :max-heap-MB (.getMaxHeapMB load)
                      :mem-store-size-in-MB (.getMemStoreSizeInMB load)
@@ -256,6 +256,11 @@
      (let [tables (find-tables-with-column-family tables column-family)]
        (remove #(compression-enabled? % column-family) tables))))
 
+;;;
+(defn region-count
+  [tables]
+  (apply + (map #(count (.getTableRegions (deref ha/*admin*) (Bytes/toBytes %))) tables)))
+
 ;;; TODOS
 (defn get-alter-status
   "HBaseAdmin"
@@ -264,3 +269,9 @@
 ;;; 
 (comment
   (get-all-compacting-tables :compaction-state a/major))
+
+(comment
+  (use 'hbase.ss.init)
+  (with-prod
+    (hb/with-table [table (hb/table "table")]
+      (.getTableName table))))
